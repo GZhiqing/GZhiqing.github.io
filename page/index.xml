@@ -2,33 +2,33 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
     <channel>
         <title>Pages on GZhiqing_BLOG</title>
-        <link>https://GZhiqing.github.io/page/</link>
+        <link>http://localhost:1313/page/</link>
         <description>Recent content in Pages on GZhiqing_BLOG</description>
         <generator>Hugo -- gohugo.io</generator>
         <language>zh-cn</language>
         <copyright>GZQBLOG</copyright>
-        <lastBuildDate>Sun, 29 Sep 2024 00:00:00 +0000</lastBuildDate><atom:link href="https://GZhiqing.github.io/page/index.xml" rel="self" type="application/rss+xml" /><item>
+        <lastBuildDate>Sun, 29 Sep 2024 00:00:00 +0000</lastBuildDate><atom:link href="http://localhost:1313/page/index.xml" rel="self" type="application/rss+xml" /><item>
         <title>归档</title>
-        <link>https://GZhiqing.github.io/archives/</link>
+        <link>http://localhost:1313/archives/</link>
         <pubDate>Sun, 29 Sep 2024 00:00:00 +0000</pubDate>
         
-        <guid>https://GZhiqing.github.io/archives/</guid>
+        <guid>http://localhost:1313/archives/</guid>
         <description></description>
         </item>
         <item>
         <title>搜索</title>
-        <link>https://GZhiqing.github.io/search/</link>
+        <link>http://localhost:1313/search/</link>
         <pubDate>Sun, 29 Sep 2024 00:00:00 +0000</pubDate>
         
-        <guid>https://GZhiqing.github.io/search/</guid>
+        <guid>http://localhost:1313/search/</guid>
         <description></description>
         </item>
         <item>
         <title>简历</title>
-        <link>https://GZhiqing.github.io/%E7%AE%80%E5%8E%86/</link>
+        <link>http://localhost:1313/%E7%AE%80%E5%8E%86/</link>
         <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
         
-        <guid>https://GZhiqing.github.io/%E7%AE%80%E5%8E%86/</guid>
+        <guid>http://localhost:1313/%E7%AE%80%E5%8E%86/</guid>
         <description>&lt;font face=&#34;Times New Roman&#34; English&gt;
 &lt;blockquote&gt;
 &lt;h2 id=&#34;基础信息&#34;&gt;基础信息
