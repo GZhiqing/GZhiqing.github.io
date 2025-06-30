@@ -549,5 +549,80 @@
 	id="2777427516">
 </meting-js>
 
+<script>
+
+function saveMusicState() {
+    const aplayer = document.querySelector('.aplayer');
+    if (aplayer && aplayer.aplayer && aplayer.aplayer.audio) {
+        const player = aplayer.aplayer;
+        const state = {
+            currentTime: player.audio.currentTime,
+            paused: player.audio.paused,
+            volume: player.audio.volume,
+            currentIndex: player.list ? player.list.index : 0,
+            timestamp: Date.now()
+        };
+        sessionStorage.setItem('musicPlayerState', JSON.stringify(state));
+    }
+}
+
+function restoreMusicState() {
+    const saved = sessionStorage.getItem('musicPlayerState');
+    if (!saved) return;
+    
+    const state = JSON.parse(saved);
+    
+    if (Date.now() - state.timestamp > 10 * 60 * 1000) {
+        sessionStorage.removeItem('musicPlayerState');
+        return;
+    }
+    
+    
+    const checkPlayer = () => {
+        const aplayer = document.querySelector('.aplayer');
+        if (aplayer && aplayer.aplayer && aplayer.aplayer.audio) {
+            const player = aplayer.aplayer;
+            
+            
+            player.volume(state.volume);
+            
+            
+            if (state.currentIndex && player.list) {
+                player.list.switch(state.currentIndex);
+            }
+            
+            
+            const restoreTime = () => {
+                if (player.audio.readyState >= 2) {
+                    player.audio.currentTime = state.currentTime;
+                    if (!state.paused) {
+                        player.play();
+                    }
+                } else {
+                    setTimeout(restoreTime, 100);
+                }
+            };
+            setTimeout(restoreTime, 500);
+            
+        } else {
+            setTimeout(checkPlayer, 200);
+        }
+    };
+    
+    setTimeout(checkPlayer, 1000);
+}
+
+
+document.addEventListener('DOMContentLoaded', function() {
+    restoreMusicState();
+    
+    
+    setInterval(saveMusicState, 2000);
+});
+
+
+window.addEventListener('beforeunload', saveMusicState);
+</script>
+
     </body>
 </html>
