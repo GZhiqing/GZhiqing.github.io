@@ -297,106 +297,71 @@
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.css">
 <script src="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.js"></script>
-
 <script src="https://cdn.jsdelivr.net/npm/meting@2/dist/Meting.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/pjax/pjax.min.js"></script>
 
-<meting-js
-	server="netease"
-	type="playlist"
-    fixed="true"
-	id="2777427516">
+
+<meting-js 
+    server="netease" 
+    type="playlist"
+    fixed="true" 
+    id="2777427516"
+    autoplay="false"
+    theme="#FADFA3"
+    loop="all"
+    order="list"
+    volume="0.7"
+    lrctype="3">
 </meting-js>
 
 <script>
 
-function savePlayerState() {
-    try {
+function saveState() {
+    const player = document.querySelector('.aplayer');
+    if (player && player.aplayer) {
+        const state = {
+            index: player.aplayer.list.index,
+            currentTime: player.aplayer.audio.currentTime,
+            paused: player.aplayer.paused,
+            timestamp: Date.now()
+        };
+        localStorage.setItem('playerState', JSON.stringify(state));
+    }
+}
+
+function restoreState() {
+    const saved = localStorage.getItem('playerState');
+    if (!saved) return;
+    
+    const state = JSON.parse(saved);
+    if (Date.now() - state.timestamp > 3600000) return; 
+    
+    setTimeout(() => {
         const player = document.querySelector('.aplayer');
         if (player && player.aplayer) {
-            const ap = player.aplayer;
-            if (ap.audio) {
-                const state = {
-                    time: ap.audio.currentTime,
-                    paused: ap.audio.paused,
-                    volume: ap.audio.volume,
-                    index: ap.list ? ap.list.index : 0,
-                    saved: Date.now()
-                };
-                localStorage.setItem('aplayer_state', JSON.stringify(state));
-            }
+            player.aplayer.list.switch(state.index);
+            setTimeout(() => {
+                player.aplayer.seek(state.currentTime);
+                if (!state.paused) player.aplayer.play();
+            }, 500);
         }
-    } catch(e) {
-        console.log('保存状态失败:', e);
-    }
+    }, 1000);
 }
 
 
-function loadPlayerState() {
-    try {
-        const saved = localStorage.getItem('aplayer_state');
-        if (!saved) return;
-        
-        const state = JSON.parse(saved);
-        
-        if (Date.now() - state.saved > 30 * 60 * 1000) {
-            localStorage.removeItem('aplayer_state');
-            return;
-        }
-        
-        
-        let attempts = 0;
-        const restore = () => {
-            const player = document.querySelector('.aplayer');
-            if (player && player.aplayer && player.aplayer.audio) {
-                const ap = player.aplayer;
-                
-                
-                ap.volume(state.volume);
-                
-                
-                if (ap.list && state.index < ap.list.audios.length) {
-                    ap.list.switch(state.index);
-                }
-                
-                
-                const setTime = () => {
-                    if (ap.audio.readyState >= 1) {
-                        ap.audio.currentTime = state.time;
-                        if (!state.paused) {
-                            ap.play();
-                        }
-                    } else if (attempts < 50) {
-                        attempts++;
-                        setTimeout(setTime, 100);
-                    }
-                };
-                setTimeout(setTime, 300);
-                
-            } else if (attempts < 20) {
-                attempts++;
-                setTimeout(restore, 500);
-            }
-        };
-        
-        setTimeout(restore, 800);
-    } catch(e) {
-        console.log('恢复状态失败:', e);
-    }
-}
+const pjax = new Pjax({
+    selectors: ['.main-container']
+});
 
 
-if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', loadPlayerState);
-} else {
-    loadPlayerState();
-}
+window.addEventListener('load', restoreState);
+window.addEventListener('beforeunload', saveState);
+setInterval(saveState, 3000);
 
 
-setInterval(savePlayerState, 3000);
-
-
-window.addEventListener('beforeunload', savePlayerState);
-window.addEventListener('pagehide', savePlayerState);
+document.addEventListener('pjax:complete', () => {
+    if (window.Stack) window.Stack.init();
+});
 </script>
 
     </body>
