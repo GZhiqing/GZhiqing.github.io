@@ -15,6 +15,44 @@
 <meta name="twitter:description" content="GZhiqing_BLOG"><link rel="alternate" type="application/rss&#43;xml" href="https://GZhiqing.github.io/tags/html/index.xml">
     <link rel="shortcut icon" href="/FX.svg" />
 
+<script>
+window.MathJax = {
+  tex: {
+    
+    inlineMath: [['\\(', '\\)']],
+    displayMath: [['\\[', '\\]'], ['$$', '$$']],
+    processEscapes: true,
+    processEnvironments: true,
+    packages: {'[+]': ['base', 'ams', 'noerrors', 'noundefined']}
+  },
+  options: {
+    skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+    ignoreHtmlClass: 'tex2jax_ignore',
+    processHtmlClass: 'tex2jax_process'
+  },
+  startup: {
+    ready: function () {
+      MathJax.startup.defaultReady();
+      MathJax.startup.promise.then(function () {
+        console.log('MathJax loaded and ready');
+      });
+    }
+  }
+};
+</script>
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+<script id="MathJax-script" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  if (window.MathJax && MathJax.typesetPromise) {
+    MathJax.typesetPromise().then(() => {
+      console.log('MathJax rendering complete');
+    }).catch((err) => console.log('MathJax rendering error:', err));
+  }
+});
+</script>
     </head>
     <body class="">
     <script>
