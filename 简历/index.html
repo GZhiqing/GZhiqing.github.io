@@ -10,7 +10,7 @@
 <meta property='og:description' content=" 基础信息 姓名：郭直清 性别：男 电话：(+86)18342832143 E-mail：Zhiqing_GUO@126.com 研究方向：露天开采理论与技术、智慧矿山、最优化理论与控制、数学建模与机器学习\n">
 <meta property='og:url' content='https://GZhiqing.github.io/%E7%AE%80%E5%8E%86/'>
 <meta property='og:site_name' content='GZhiqing_BLOG'>
-<meta property='og:type' content='article'><meta property='article:section' content='Page' />
+<meta property='og:type' content='article'><meta property='article:section' content='Page' /><meta property='article:published_time' content='2024-01-01T00:00:00&#43;08:00'/><meta property='article:modified_time' content='2024-12-20T12:00:00&#43;08:00'/>
 <meta name="twitter:title" content="简历">
 <meta name="twitter:description" content=" 基础信息 姓名：郭直清 性别：男 电话：(+86)18342832143 E-mail：Zhiqing_GUO@126.com 研究方向：露天开采理论与技术、智慧矿山、最优化理论与控制、数学建模与机器学习\n">
     <link rel="shortcut icon" href="/FX.svg" />
@@ -92,26 +92,24 @@ document.addEventListener('DOMContentLoaded', function() {
             const elements = document.querySelectorAll('.page-view-count');
             const currentUrl = window.location.pathname;
             const isArticlePage = document.body.classList.contains('article-page') || 
-                                 document.querySelector('.article-page') !== null;
+                                 document.querySelector('.article-page') !== null ||
+                                 document.querySelector('article') !== null;
             
             console.log('更新显示 - 找到元素:', elements.length, '当前URL:', currentUrl, '是文章页:', isArticlePage);
-            
-            let hasIncremented = false;
             
             elements.forEach(function(element) {
                 const articleUrl = element.getAttribute('data-url');
                 let count = window.BlogStats.getCount(articleUrl);
                 
                 
-                if (isArticlePage && 
-                    articleUrl === currentUrl && 
-                    !hasIncremented && 
-                    !sessionStorage.getItem('pv_incremented_' + articleUrl)) {
+                if (isArticlePage && articleUrl === currentUrl) {
                     
-                    count = window.BlogStats.increment(articleUrl);
-                    hasIncremented = true;
-                    
-                    sessionStorage.setItem('pv_incremented_' + articleUrl, 'true');
+                    const pageLoadKey = 'page_load_' + Date.now() + '_' + Math.random();
+                    if (!window.currentPageCounted) {
+                        count = window.BlogStats.increment(articleUrl);
+                        window.currentPageCounted = true;
+                        console.log('文章页面访问，计数增加:', articleUrl, count);
+                    }
                 }
                 
                 
@@ -170,6 +168,9 @@ document.addEventListener('DOMContentLoaded', function() {
                         e.stopPropagation();
                         
                         
+                        window.currentPageCounted = false;
+                        
+                        
                         window.location.href = href;
                         return false;
                     }
@@ -182,8 +183,14 @@ document.addEventListener('DOMContentLoaded', function() {
         
         init: function() {
             console.log('BlogStats 初始化');
-            this.updateDisplay();
-            this.forceRefresh();
+            
+            window.currentPageCounted = false;
+            
+            
+            setTimeout(() => {
+                this.updateDisplay();
+                this.forceRefresh();
+            }, 100);
         }
     };
     
@@ -197,14 +204,36 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     
+    window.addEventListener('pageshow', function(e) {
+        console.log('pageshow事件，persisted:', e.persisted);
+        
+        window.currentPageCounted = false;
+        setTimeout(() => {
+            window.BlogStats.updateDisplay();
+        }, 50);
+    });
+    
+    
     window.showStats = function() {
         console.log('=== 博客访问统计 ===');
+        let found = false;
         for (let i = 0; i < localStorage.length; i++) {
             const key = localStorage.key(i);
             if (key.startsWith(window.BlogStats.keyPrefix)) {
                 const value = localStorage.getItem(key);
-                console.log(key.replace(window.BlogStats.keyPrefix, '') + ': ' + value + ' 次');
+                try {
+                    
+                    const urlPart = key.replace(window.BlogStats.keyPrefix, '');
+                    console.log('URL: ' + urlPart + ' => ' + value + ' 次访问');
+                    found = true;
+                } catch(e) {
+                    console.log(key + ': ' + value + ' 次');
+                    found = true;
+                }
             }
+        }
+        if (!found) {
+            console.log('暂无统计数据');
         }
         console.log('=== 统计结束 ===');
     };
@@ -219,17 +248,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         keys.forEach(key => localStorage.removeItem(key));
         
-        
-        const sessionKeys = [];
-        for (let i = 0; i < sessionStorage.length; i++) {
-            const key = sessionStorage.key(i);
-            if (key.startsWith('pv_incremented_')) {
-                sessionKeys.push(key);
-            }
-        }
-        sessionKeys.forEach(key => sessionStorage.removeItem(key));
-        
-        console.log('已清除所有统计数据');
+        console.log('已清除所有统计数据，共清除', keys.length, '条记录');
         location.reload();
     };
     
@@ -531,6 +550,19 @@ document.addEventListener('DOMContentLoaded', function() {
     
     <footer class="article-time">
         
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published">2024-01-01</time>
+            </div>
+        
 
         
         
@@ -707,7 +739,19 @@ document.addEventListener('DOMContentLoaded', function() {
     <footer class="article-footer">
     
 
-    </footer>
+    <section class="article-lastmod">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+        <span>
+            最后更新于 Dec 20, 2024 12:00 CST
+        </span>
+    </section></footer>
 
 
     
@@ -981,19 +1025,52 @@ document.addEventListener('pjax:complete', () => {
 <script>
 
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('Footer: 确保统计系统正常运行');
+    console.log('Footer: 页面加载完成，检查统计系统');
     
     
-    function checkStatsSystem() {
+    function ensureStatsWork() {
         if (window.BlogStats) {
             console.log('Footer: 统计系统已加载');
             
+            
+            setTimeout(function() {
+                const elements = document.querySelectorAll('.page-view-count');
+                console.log('Footer: 更新', elements.length, '个统计显示元素');
+                
+                elements.forEach(function(element) {
+                    const articleUrl = element.getAttribute('data-url');
+                    if (articleUrl) {
+                        const count = window.BlogStats.getCount(articleUrl);
+                        element.textContent = count;
+                        console.log('Footer: 更新显示', articleUrl, '访问次数:', count);
+                    }
+                });
+            }, 200);
+            
         } else {
-            setTimeout(checkStatsSystem, 50);
+            console.log('Footer: 等待统计系统加载...');
+            setTimeout(ensureStatsWork, 100);
         }
     }
     
-    checkStatsSystem();
+    ensureStatsWork();
+});
+
+
+window.addEventListener('focus', function() {
+    console.log('Footer: 页面获得焦点，刷新统计显示');
+    if (window.BlogStats) {
+        setTimeout(function() {
+            const elements = document.querySelectorAll('.page-view-count');
+            elements.forEach(function(element) {
+                const articleUrl = element.getAttribute('data-url');
+                if (articleUrl) {
+                    const count = window.BlogStats.getCount(articleUrl);
+                    element.textContent = count;
+                }
+            });
+        }, 100);
+    }
 });
 </script>
 
