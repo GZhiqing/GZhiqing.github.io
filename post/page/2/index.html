@@ -53,6 +53,7 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 });
 </script>
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
     </head>
     <body class="">
     <script>
@@ -579,7 +580,7 @@ document.addEventListener('pjax:complete', () => {
         let viewCounts = document.querySelectorAll("#viewCount");
         if (viewCounts) {
             
-            let article =  document.querySelector(".article-page");
+            let article = document.querySelector(".article-page");
             if (!article) {
                 viewCounts.forEach(ele => {
                     ele.style.display = 'none';
@@ -588,7 +589,15 @@ document.addEventListener('pjax:complete', () => {
         }
     }
     
-    showHideView();
+    
+    document.addEventListener('DOMContentLoaded', function() {
+        showHideView();
+        
+        
+        setTimeout(function() {
+            showHideView();
+        }, 1000);
+    });
 </script>
 
     </body>

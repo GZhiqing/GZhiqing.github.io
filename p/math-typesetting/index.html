@@ -53,6 +53,7 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 });
 </script>
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
     </head>
     <body class="
     article-page
@@ -368,7 +369,7 @@ document.addEventListener('DOMContentLoaded', function() {
             <?xml version="1.0" standalone="no"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"><svg t="1751341158288" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="5861" xmlns:xlink="http://www.w3.org/1999/xlink" width="200" height="200"><path d="M505.862 220.138c-247.754 0-448.598 296.135-448.598 296.135s200.844 296.135 448.598 296.135S954.46 516.273 954.46 516.273 753.616 220.138 505.862 220.138z m268.939 391.274c-42.507 38.764-85.315 69.415-127.236 91.1-49.081 25.389-96.758 38.262-141.703 38.262-44.53 0-91.75-12.639-140.346-37.564-41.62-21.346-84.146-51.561-126.399-89.805-38.962-35.266-70.55-70.996-91.903-97.18 20.833-25.553 51.524-60.271 89.708-95.095 42.507-38.764 85.315-69.415 127.236-91.1 49.082-25.389 96.758-38.262 141.703-38.262 44.53 0 91.749 12.639 140.346 37.564 41.62 21.346 84.146 51.562 126.398 89.805 38.962 35.266 70.551 70.996 91.904 97.18-20.833 25.553-51.523 60.272-89.708 95.095z" p-id="5862" fill="#8a8a8a"></path><path d="M661.102 438.722c0 37.454-30.361 67.816-67.816 67.816s-67.815-30.361-67.815-67.816c0-37.453 30.361-67.816 67.815-67.816 0.348 0 0.69 0.021 1.037 0.027-22.651-11.842-48.411-18.546-75.741-18.546-90.424 0-163.729 73.304-163.729 163.729 0 90.424 73.305 163.728 163.729 163.728 90.425 0 163.729-73.304 163.729-163.728 0-29.381-7.745-56.95-21.296-80.788 0.056 1.125 0.087 2.255 0.087 3.394z" p-id="5863" fill="#8a8a8a"></path></svg>
             <time class="article-time--reading">
                 
-                <span id="vercount_value_page_pv">loading... </span>次
+                <span id="busuanzi_value_page_pv">-</span>次
             </time>
         </div>
     </footer>
@@ -669,7 +670,7 @@ document.addEventListener('pjax:complete', () => {
         let viewCounts = document.querySelectorAll("#viewCount");
         if (viewCounts) {
             
-            let article =  document.querySelector(".article-page");
+            let article = document.querySelector(".article-page");
             if (!article) {
                 viewCounts.forEach(ele => {
                     ele.style.display = 'none';
@@ -678,7 +679,15 @@ document.addEventListener('pjax:complete', () => {
         }
     }
     
-    showHideView();
+    
+    document.addEventListener('DOMContentLoaded', function() {
+        showHideView();
+        
+        
+        setTimeout(function() {
+            showHideView();
+        }, 1000);
+    });
 </script>
 
     </body>
