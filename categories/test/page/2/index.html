@@ -55,6 +55,37 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 </script>
 <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+<script>
+
+function checkBusuanziLoaded() {
+    if (typeof busuanzi !== 'undefined') {
+        
+        console.log('不蒜子统计已加载');
+    } else {
+        
+        setTimeout(checkBusuanziLoaded, 100);
+    }
+}
+
+
+document.addEventListener('DOMContentLoaded', function() {
+    checkBusuanziLoaded();
+    
+    
+    window.addEventListener('load', function() {
+        
+        setTimeout(function() {
+            var pageViews = document.getElementById('busuanzi_value_page_pv');
+            if (pageViews && (pageViews.textContent === '加载中...' || pageViews.textContent === '')) {
+                
+                console.log('不蒜子统计可能加载失败');
+            }
+        }, 3000);
+    });
+});
+</script>
     </head>
     <body class="">
     <script>
