@@ -53,46 +53,49 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 });
 </script>
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
 <script>
     
-    window.busuanziConfig = {
-        callback: function() {
-            
-            console.log('不蒜子统计加载完成');
-        }
-    };
-</script>
-<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
-
-
-<script>
-
-function checkBusuanziLoaded() {
-    if (typeof busuanzi !== 'undefined') {
-        
-        console.log('不蒜子统计已加载');
-    } else {
-        
-        setTimeout(checkBusuanziLoaded, 100);
-    }
-}
-
-
-document.addEventListener('DOMContentLoaded', function() {
-    checkBusuanziLoaded();
+    console.log('初始化访问统计');
     
     
     window.addEventListener('load', function() {
+        console.log('页面完全加载完成');
         
         setTimeout(function() {
-            var pageViews = document.getElementById('busuanzi_value_page_pv');
-            if (pageViews && (pageViews.textContent === '加载中...' || pageViews.textContent === '')) {
-                
-                console.log('不蒜子统计可能加载失败');
-            }
-        }, 3000);
+            const event = new CustomEvent('updateStats');
+            window.dispatchEvent(event);
+        }, 200);
     });
-});
+    
+    
+    window.showAllStats = function() {
+        console.log('=== 所有访问统计数据 ===');
+        for (let i = 0; i < localStorage.length; i++) {
+            const key = localStorage.key(i);
+            if (key.startsWith('pageview_')) {
+                const value = localStorage.getItem(key);
+                console.log(key + ': ' + value);
+            }
+        }
+        console.log('=== 统计数据结束 ===');
+    };
+    
+    
+    window.clearAllStats = function() {
+        const keys = [];
+        for (let i = 0; i < localStorage.length; i++) {
+            const key = localStorage.key(i);
+            if (key.startsWith('pageview_')) {
+                keys.push(key);
+            }
+        }
+        keys.forEach(key => localStorage.removeItem(key));
+        console.log('已清除所有统计数据');
+        window.location.reload();
+    };
 </script>
     </head>
     <body class="">
@@ -573,37 +576,106 @@ document.addEventListener('pjax:complete', () => {
 
 <script>
     
-    function initBusuanzi() {
+    function updateViewCount() {
+        const viewCountElements = document.querySelectorAll('.busuanzi_value_page_pv');
+        console.log('找到访问统计元素:', viewCountElements.length);
+        console.log('当前页面路径:', window.location.pathname);
         
-        if (typeof window.busuanzi !== 'undefined') {
-            try {
-                window.busuanzi.fetch();
-            } catch (e) {
-                console.log('不蒜子统计更新失败:', e);
-            }
-        } else {
+        
+        const isArticlePage = document.querySelector('.article-page') !== null;
+        console.log('是否为文章页面:', isArticlePage);
+        
+        viewCountElements.forEach(function(element) {
+            const articleUrl = element.getAttribute('data-url');
+            const storageKey = 'pageview_' + btoa(unescape(encodeURIComponent(articleUrl))).replace(/[^a-zA-Z0-9]/g, '');
             
-            setTimeout(initBusuanzi, 200);
-        }
+            
+            let count = parseInt(localStorage.getItem(storageKey)) || 0;
+            
+            
+            if (isArticlePage && articleUrl === window.location.pathname) {
+                count++;
+                localStorage.setItem(storageKey, count);
+                console.log('增加文章访问计数:', articleUrl, count);
+            }
+            
+            
+            element.textContent = count;
+            console.log('显示访问次数:', articleUrl, count);
+        });
     }
     
     
-    document.addEventListener('DOMContentLoaded', function() {
+    function forcePageRefresh() {
         
+        const links = document.querySelectorAll('a[href^="/"], a[href^="./"], a[href^="../"]');
+        links.forEach(function(link) {
+            
+            if (link.hasAttribute('data-force-refresh')) return;
+            link.setAttribute('data-force-refresh', 'true');
+            
+            link.addEventListener('click', function(e) {
+                
+                const href = this.getAttribute('href');
+                if (href && !href.startsWith('#') && !href.includes('mailto:') && !href.includes('tel:')) {
+                    console.log('强制刷新页面:', href);
+                    
+                    window.location.assign(href);
+                    e.preventDefault();
+                    return false;
+                }
+            });
+        });
+    }
+    
+    
+    updateViewCount();
+    
+    
+    document.addEventListener('DOMContentLoaded', function() {
+        console.log('页面加载完成');
         setTimeout(function() {
-            initBusuanzi();
-        }, 1000);
+            updateViewCount();
+            forcePageRefresh();
+        }, 100);
     });
     
     
     window.addEventListener('popstate', function() {
-        setTimeout(initBusuanzi, 200);
+        console.log('popstate事件触发');
+        setTimeout(updateViewCount, 100);
     });
-    
     
     window.addEventListener('hashchange', function() {
-        setTimeout(initBusuanzi, 200);
+        console.log('hashchange事件触发');
+        setTimeout(updateViewCount, 100);
     });
+    
+    
+    window.addEventListener('pageshow', function(e) {
+        console.log('pageshow事件触发');
+        if (e.persisted) {
+            
+            setTimeout(updateViewCount, 100);
+        }
+    });
+    
+    
+    window.addEventListener('focus', function() {
+        console.log('focus事件触发');
+        setTimeout(updateViewCount, 100);
+    });
+    
+    
+    window.addEventListener('updateStats', function() {
+        console.log('收到统计更新事件');
+        updateViewCount();
+    });
+    
+    
+    setInterval(function() {
+        updateViewCount();
+    }, 5000); 
 </script>
 
     </body>

@@ -54,46 +54,49 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 });
 </script>
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
 <script>
     
-    window.busuanziConfig = {
-        callback: function() {
-            
-            console.log('不蒜子统计加载完成');
-        }
-    };
-</script>
-<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
-
-
-<script>
-
-function checkBusuanziLoaded() {
-    if (typeof busuanzi !== 'undefined') {
-        
-        console.log('不蒜子统计已加载');
-    } else {
-        
-        setTimeout(checkBusuanziLoaded, 100);
-    }
-}
-
-
-document.addEventListener('DOMContentLoaded', function() {
-    checkBusuanziLoaded();
+    console.log('初始化访问统计');
     
     
     window.addEventListener('load', function() {
+        console.log('页面完全加载完成');
         
         setTimeout(function() {
-            var pageViews = document.getElementById('busuanzi_value_page_pv');
-            if (pageViews && (pageViews.textContent === '加载中...' || pageViews.textContent === '')) {
-                
-                console.log('不蒜子统计可能加载失败');
-            }
-        }, 3000);
+            const event = new CustomEvent('updateStats');
+            window.dispatchEvent(event);
+        }, 200);
     });
-});
+    
+    
+    window.showAllStats = function() {
+        console.log('=== 所有访问统计数据 ===');
+        for (let i = 0; i < localStorage.length; i++) {
+            const key = localStorage.key(i);
+            if (key.startsWith('pageview_')) {
+                const value = localStorage.getItem(key);
+                console.log(key + ': ' + value);
+            }
+        }
+        console.log('=== 统计数据结束 ===');
+    };
+    
+    
+    window.clearAllStats = function() {
+        const keys = [];
+        for (let i = 0; i < localStorage.length; i++) {
+            const key = localStorage.key(i);
+            if (key.startsWith('pageview_')) {
+                keys.push(key);
+            }
+        }
+        keys.forEach(key => localStorage.removeItem(key));
+        console.log('已清除所有统计数据');
+        window.location.reload();
+    };
 </script>
     </head>
     <body class="">
@@ -497,11 +500,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
         
         
-        <div id="viewCount">
+        <div class="viewCount">
             <?xml version="1.0" standalone="no"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"><svg t="1751341158288" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="5861" xmlns:xlink="http://www.w3.org/1999/xlink" width="200" height="200"><path d="M505.862 220.138c-247.754 0-448.598 296.135-448.598 296.135s200.844 296.135 448.598 296.135S954.46 516.273 954.46 516.273 753.616 220.138 505.862 220.138z m268.939 391.274c-42.507 38.764-85.315 69.415-127.236 91.1-49.081 25.389-96.758 38.262-141.703 38.262-44.53 0-91.75-12.639-140.346-37.564-41.62-21.346-84.146-51.561-126.399-89.805-38.962-35.266-70.55-70.996-91.903-97.18 20.833-25.553 51.524-60.271 89.708-95.095 42.507-38.764 85.315-69.415 127.236-91.1 49.082-25.389 96.758-38.262 141.703-38.262 44.53 0 91.749 12.639 140.346 37.564 41.62 21.346 84.146 51.562 126.398 89.805 38.962 35.266 70.551 70.996 91.904 97.18-20.833 25.553-51.523 60.272-89.708 95.095z" p-id="5862" fill="#8a8a8a"></path><path d="M661.102 438.722c0 37.454-30.361 67.816-67.816 67.816s-67.815-30.361-67.815-67.816c0-37.453 30.361-67.816 67.815-67.816 0.348 0 0.69 0.021 1.037 0.027-22.651-11.842-48.411-18.546-75.741-18.546-90.424 0-163.729 73.304-163.729 163.729 0 90.424 73.305 163.728 163.729 163.728 90.425 0 163.729-73.304 163.729-163.728 0-29.381-7.745-56.95-21.296-80.788 0.056 1.125 0.087 2.255 0.087 3.394z" p-id="5863" fill="#8a8a8a"></path></svg>
             <time class="article-time--reading">
                 
-                <span id="busuanzi_value_page_pv">加载中...</span>次
+                <span class="busuanzi_value_page_pv" data-url="/p/emoji-support/">-</span>次
             </time>
         </div>
     </footer>
@@ -645,37 +648,106 @@ document.addEventListener('pjax:complete', () => {
 
 <script>
     
-    function initBusuanzi() {
+    function updateViewCount() {
+        const viewCountElements = document.querySelectorAll('.busuanzi_value_page_pv');
+        console.log('找到访问统计元素:', viewCountElements.length);
+        console.log('当前页面路径:', window.location.pathname);
         
-        if (typeof window.busuanzi !== 'undefined') {
-            try {
-                window.busuanzi.fetch();
-            } catch (e) {
-                console.log('不蒜子统计更新失败:', e);
-            }
-        } else {
+        
+        const isArticlePage = document.querySelector('.article-page') !== null;
+        console.log('是否为文章页面:', isArticlePage);
+        
+        viewCountElements.forEach(function(element) {
+            const articleUrl = element.getAttribute('data-url');
+            const storageKey = 'pageview_' + btoa(unescape(encodeURIComponent(articleUrl))).replace(/[^a-zA-Z0-9]/g, '');
             
-            setTimeout(initBusuanzi, 200);
-        }
+            
+            let count = parseInt(localStorage.getItem(storageKey)) || 0;
+            
+            
+            if (isArticlePage && articleUrl === window.location.pathname) {
+                count++;
+                localStorage.setItem(storageKey, count);
+                console.log('增加文章访问计数:', articleUrl, count);
+            }
+            
+            
+            element.textContent = count;
+            console.log('显示访问次数:', articleUrl, count);
+        });
     }
     
     
-    document.addEventListener('DOMContentLoaded', function() {
+    function forcePageRefresh() {
         
+        const links = document.querySelectorAll('a[href^="/"], a[href^="./"], a[href^="../"]');
+        links.forEach(function(link) {
+            
+            if (link.hasAttribute('data-force-refresh')) return;
+            link.setAttribute('data-force-refresh', 'true');
+            
+            link.addEventListener('click', function(e) {
+                
+                const href = this.getAttribute('href');
+                if (href && !href.startsWith('#') && !href.includes('mailto:') && !href.includes('tel:')) {
+                    console.log('强制刷新页面:', href);
+                    
+                    window.location.assign(href);
+                    e.preventDefault();
+                    return false;
+                }
+            });
+        });
+    }
+    
+    
+    updateViewCount();
+    
+    
+    document.addEventListener('DOMContentLoaded', function() {
+        console.log('页面加载完成');
         setTimeout(function() {
-            initBusuanzi();
-        }, 1000);
+            updateViewCount();
+            forcePageRefresh();
+        }, 100);
     });
     
     
     window.addEventListener('popstate', function() {
-        setTimeout(initBusuanzi, 200);
+        console.log('popstate事件触发');
+        setTimeout(updateViewCount, 100);
     });
-    
     
     window.addEventListener('hashchange', function() {
-        setTimeout(initBusuanzi, 200);
+        console.log('hashchange事件触发');
+        setTimeout(updateViewCount, 100);
     });
+    
+    
+    window.addEventListener('pageshow', function(e) {
+        console.log('pageshow事件触发');
+        if (e.persisted) {
+            
+            setTimeout(updateViewCount, 100);
+        }
+    });
+    
+    
+    window.addEventListener('focus', function() {
+        console.log('focus事件触发');
+        setTimeout(updateViewCount, 100);
+    });
+    
+    
+    window.addEventListener('updateStats', function() {
+        console.log('收到统计更新事件');
+        updateViewCount();
+    });
+    
+    
+    setInterval(function() {
+        updateViewCount();
+    }, 5000); 
 </script>
 
     </body>
