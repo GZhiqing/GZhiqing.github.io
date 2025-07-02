@@ -53,19 +53,21 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 });
 </script>
-<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-<meta http-equiv="Pragma" content="no-cache">
-<meta http-equiv="Expires" content="0">
-
 <script>
 
 (function() {
     'use strict';
     
     
+    if (window.BlogStats) {
+        return;
+    }
+    
+    
     window.BlogStats = {
         
         keyPrefix: 'blog_pv_',
+        isInitialized: false,
         
         
         getCount: function(url) {
@@ -76,10 +78,19 @@ document.addEventListener('DOMContentLoaded', function() {
         
         increment: function(url) {
             const key = this.keyPrefix + this.encodeUrl(url);
-            const count = this.getCount(url) + 1;
-            localStorage.setItem(key, count.toString());
-            console.log('访问计数增加:', url, '次数:', count);
-            return count;
+            const sessionKey = 'visited_' + this.encodeUrl(url);
+            
+            
+            if (!sessionStorage.getItem(sessionKey)) {
+                const count = this.getCount(url) + 1;
+                localStorage.setItem(key, count.toString());
+                sessionStorage.setItem(sessionKey, 'true');
+                console.log('访问计数增加:', url, '次数:', count);
+                return count;
+            } else {
+                console.log('本次会话已访问过:', url, '不重复计数');
+                return this.getCount(url);
+            }
         },
         
         
@@ -89,7 +100,7 @@ document.addEventListener('DOMContentLoaded', function() {
         
         
         updateDisplay: function() {
-            const elements = document.querySelectorAll('.page-view-count');
+            const elements = document.querySelectorAll('.page-view-count, .view-count-number');
             const currentUrl = window.location.pathname;
             const isArticlePage = document.body.classList.contains('article-page') || 
                                  document.querySelector('.article-page') !== null ||
@@ -98,18 +109,18 @@ document.addEventListener('DOMContentLoaded', function() {
             console.log('更新显示 - 找到元素:', elements.length, '当前URL:', currentUrl, '是文章页:', isArticlePage);
             
             elements.forEach(function(element) {
-                const articleUrl = element.getAttribute('data-url');
+                const articleUrl = element.getAttribute('data-url') || 
+                                 element.closest('[data-url]')?.getAttribute('data-url');
+                
+                if (!articleUrl) return;
+                
                 let count = window.BlogStats.getCount(articleUrl);
                 
                 
-                if (isArticlePage && articleUrl === currentUrl) {
-                    
-                    const pageLoadKey = 'page_load_' + Date.now() + '_' + Math.random();
-                    if (!window.currentPageCounted) {
-                        count = window.BlogStats.increment(articleUrl);
-                        window.currentPageCounted = true;
-                        console.log('文章页面访问，计数增加:', articleUrl, count);
-                    }
+                if (isArticlePage && articleUrl === currentUrl && !window.pageViewCounted) {
+                    count = window.BlogStats.increment(articleUrl);
+                    window.pageViewCounted = true;
+                    console.log('文章页面访问，计数增加:', articleUrl, count);
                 }
                 
                 
@@ -119,77 +130,28 @@ document.addEventListener('DOMContentLoaded', function() {
         },
         
         
-        forceRefresh: function() {
+        handleNavigation: function() {
             
-            const originalPushState = history.pushState;
-            const originalReplaceState = history.replaceState;
-            
-            history.pushState = function() {
-                const url = arguments[2];
-                if (url && url !== window.location.pathname) {
-                    console.log('拦截pushState，强制跳转:', url);
-                    window.location.href = url;
-                    return;
-                }
-                return originalPushState.apply(history, arguments);
-            };
-            
-            history.replaceState = function() {
-                const url = arguments[2];
-                if (url && url !== window.location.pathname) {
-                    console.log('拦截replaceState，强制跳转:', url);
-                    window.location.href = url;
-                    return;
-                }
-                return originalReplaceState.apply(history, arguments);
-            };
-            
-            
-            document.addEventListener('click', function(e) {
-                let target = e.target;
-                
-                
-                while (target && target.tagName !== 'A') {
-                    target = target.parentNode;
-                    if (target === document) break;
-                }
-                
-                if (target && target.tagName === 'A') {
-                    const href = target.getAttribute('href');
-                    
-                    
-                    if (href && 
-                        href.startsWith('/') && 
-                        !href.startsWith('#') && 
-                        href !== window.location.pathname) {
-                        
-                        console.log('拦截链接点击，强制跳转:', href);
-                        e.preventDefault();
-                        e.stopPropagation();
-                        
-                        
-                        window.currentPageCounted = false;
-                        
-                        
-                        window.location.href = href;
-                        return false;
-                    }
-                }
-            }, true);
-            
-            console.log('强制刷新机制已启用');
+            console.log('导航处理已启用（PJAX模式）');
         },
         
         
         init: function() {
-            console.log('BlogStats 初始化');
+            if (this.isInitialized) {
+                console.log('BlogStats 已初始化，跳过');
+                return;
+            }
             
-            window.currentPageCounted = false;
+            console.log('BlogStats 初始化');
+            this.isInitialized = true;
+            
+            
+            window.pageViewCounted = false;
             
             
             setTimeout(() => {
                 this.updateDisplay();
-                this.forceRefresh();
+                this.handleNavigation();
             }, 100);
         }
     };
@@ -206,11 +168,19 @@ document.addEventListener('DOMContentLoaded', function() {
     
     window.addEventListener('pageshow', function(e) {
         console.log('pageshow事件，persisted:', e.persisted);
+        if (e.persisted) {
+            
+            setTimeout(() => {
+                window.BlogStats.updateDisplay();
+            }, 50);
+        }
+    });
+    
+    
+    window.addEventListener('beforeunload', function() {
+        console.log('页面即将离开，清除会话访问标记');
         
-        window.currentPageCounted = false;
-        setTimeout(() => {
-            window.BlogStats.updateDisplay();
-        }, 50);
+        
     });
     
     
@@ -247,9 +217,10 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
         keys.forEach(key => localStorage.removeItem(key));
+        sessionStorage.clear(); 
         
         console.log('已清除所有统计数据，共清除', keys.length, '条记录');
-        location.reload();
+        window.BlogStats.updateDisplay();
     };
     
 })();
@@ -1246,7 +1217,8 @@ function restoreState() {
 
 
 const pjax = new Pjax({
-    selectors: ['.main-container']
+    selectors: ['.main-container'],
+    cacheBust: false
 });
 
 
@@ -1255,10 +1227,86 @@ window.addEventListener('beforeunload', saveState);
 setInterval(saveState, 3000);
 
 
+document.addEventListener('pjax:send', () => {
+    
+    saveState();
+    console.log('PJAX: 保存音乐播放状态');
+});
+
 document.addEventListener('pjax:complete', () => {
+    
+    restoreState();
+    
+    
     if (window.Stack) window.Stack.init();
+    if (window.BlogStats && !window.BlogStats.isInitialized) {
+        window.BlogStats.init();
+    }
+    
+    console.log('PJAX: 页面跳转完成，重新初始化系统');
+});
+
+
+document.addEventListener('pjax:start', () => {
+    
+    window.pageViewCounted = false;
+    console.log('PJAX: 重置访问计数标记');
 });
 </script>
+<script src="https://cdn.jsdelivr.net/npm/pjax/pjax.js"></script>
+<script>
+	var pjax = new Pjax({
+        selectors: [".main-container"],
+        cacheBust: false
+	})
+
+	pjax._handleResponse = pjax.handleResponse;
+
+	pjax.handleResponse = function(responseText, request, href, options) {
+		if (request.responseText.match("<html")) {
+            
+            let newDom = new DOMParser().parseFromString(responseText, 'text/html');
+            
+            let bodyClass = newDom.body.className;
+            document.body.setAttribute("class", bodyClass)
+            
+            pjax._handleResponse(responseText, request, href, options);
+        } else {
+            
+        }
+	}
+
+    
+    document.addEventListener('pjax:send', () => {
+        console.log('PJAX: 开始页面跳转');
+        
+        window.pageViewCounted = false;
+    });
+
+    document.addEventListener('pjax:complete', () => {
+        console.log('PJAX: 页面跳转完成');
+        
+        
+        if (window.Stack) {
+            window.Stack.init();
+        }
+        
+        
+        if (window.BlogStats) {
+            setTimeout(() => {
+                window.BlogStats.updateDisplay();
+            }, 100);
+        }
+        
+        
+        if (window.MathJax && MathJax.typesetPromise) {
+            MathJax.typesetPromise().then(() => {
+                console.log('PJAX: MathJax 重新渲染完成');
+            }).catch((err) => console.log('PJAX: MathJax 渲染错误:', err));
+        }
+    });
+</script>
+
 
 <script>
 
@@ -1267,23 +1315,25 @@ document.addEventListener('DOMContentLoaded', function() {
     
     
     function ensureStatsWork() {
-        if (window.BlogStats) {
-            console.log('Footer: 统计系统已加载');
+        if (window.BlogStats && window.BlogStats.isInitialized) {
+            console.log('Footer: 统计系统已加载并初始化');
             
             
             setTimeout(function() {
-                const elements = document.querySelectorAll('.page-view-count');
+                const elements = document.querySelectorAll('.page-view-count, .view-count-number');
                 console.log('Footer: 更新', elements.length, '个统计显示元素');
                 
                 elements.forEach(function(element) {
-                    const articleUrl = element.getAttribute('data-url');
+                    const articleUrl = element.getAttribute('data-url') || 
+                                     element.closest('[data-url]')?.getAttribute('data-url');
+                    
                     if (articleUrl) {
                         const count = window.BlogStats.getCount(articleUrl);
                         element.textContent = count;
                         console.log('Footer: 更新显示', articleUrl, '访问次数:', count);
                     }
                 });
-            }, 200);
+            }, 300);
             
         } else {
             console.log('Footer: 等待统计系统加载...');
@@ -1297,11 +1347,13 @@ document.addEventListener('DOMContentLoaded', function() {
 
 window.addEventListener('focus', function() {
     console.log('Footer: 页面获得焦点，刷新统计显示');
-    if (window.BlogStats) {
+    if (window.BlogStats && window.BlogStats.isInitialized) {
         setTimeout(function() {
-            const elements = document.querySelectorAll('.page-view-count');
+            const elements = document.querySelectorAll('.page-view-count, .view-count-number');
             elements.forEach(function(element) {
-                const articleUrl = element.getAttribute('data-url');
+                const articleUrl = element.getAttribute('data-url') || 
+                                 element.closest('[data-url]')?.getAttribute('data-url');
+                
                 if (articleUrl) {
                     const count = window.BlogStats.getCount(articleUrl);
                     element.textContent = count;
