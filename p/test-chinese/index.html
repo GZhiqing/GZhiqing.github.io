@@ -54,6 +54,15 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 });
 </script>
+<script>
+    
+    window.busuanziConfig = {
+        callback: function() {
+            
+            console.log('不蒜子统计加载完成');
+        }
+    };
+</script>
 <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
 
 
@@ -809,28 +818,37 @@ document.addEventListener('pjax:complete', () => {
 </script>
 
 <script>
-    function showHideView() {
+    
+    function initBusuanzi() {
         
-        let viewCounts = document.querySelectorAll("#viewCount");
-        if (viewCounts) {
-            
-            let article = document.querySelector(".article-page");
-            if (!article) {
-                viewCounts.forEach(ele => {
-                    ele.style.display = 'none';
-                });
+        if (typeof window.busuanzi !== 'undefined') {
+            try {
+                window.busuanzi.fetch();
+            } catch (e) {
+                console.log('不蒜子统计更新失败:', e);
             }
+        } else {
+            
+            setTimeout(initBusuanzi, 200);
         }
     }
     
     
     document.addEventListener('DOMContentLoaded', function() {
-        showHideView();
-        
         
         setTimeout(function() {
-            showHideView();
+            initBusuanzi();
         }, 1000);
+    });
+    
+    
+    window.addEventListener('popstate', function() {
+        setTimeout(initBusuanzi, 200);
+    });
+    
+    
+    window.addEventListener('hashchange', function() {
+        setTimeout(initBusuanzi, 200);
     });
 </script>
 
