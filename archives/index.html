@@ -6,7 +6,7 @@
 
 <link rel='canonical' href='https://GZhiqing.github.io/archives/'>
 
-<link rel="stylesheet" href="/scss/style.min.49536cecfa3fe166265c6eb8eef0851bfc47a0ae3c707a6dff69283e616b86c2.css"><meta property='og:title' content="归档">
+<link rel="stylesheet" href="/scss/style.min.1ad883ce076dca4bc5437042b6dd8a4833be1b3def0b5e6558ea855400dfe5ad.css"><meta property='og:title' content="归档">
 <meta property='og:description' content="">
 <meta property='og:url' content='https://GZhiqing.github.io/archives/'>
 <meta property='og:site_name' content='GZhiqing_BLOG'>
@@ -78,17 +78,21 @@ document.addEventListener('DOMContentLoaded', function() {
         
         increment: function(url) {
             const key = this.keyPrefix + this.encodeUrl(url);
-            const sessionKey = 'visited_' + this.encodeUrl(url);
+            const sessionKey = 'visited_' + this.encodeUrl(url) + '_' + Math.floor(Date.now() / 1000);
             
             
-            if (!sessionStorage.getItem(sessionKey)) {
+            if (!window.sessionPageVisited) {
+                window.sessionPageVisited = {};
+            }
+            
+            if (!window.sessionPageVisited[url]) {
                 const count = this.getCount(url) + 1;
                 localStorage.setItem(key, count.toString());
-                sessionStorage.setItem(sessionKey, 'true');
+                window.sessionPageVisited[url] = true;
                 console.log('访问计数增加:', url, '次数:', count);
                 return count;
             } else {
-                console.log('本次会话已访问过:', url, '不重复计数');
+                console.log('本次页面加载已访问过:', url, '不重复计数');
                 return this.getCount(url);
             }
         },
@@ -131,8 +135,8 @@ document.addEventListener('DOMContentLoaded', function() {
         
         
         handleNavigation: function() {
+            console.log('导航处理已启用（正常刷新模式）');
             
-            console.log('导航处理已启用（PJAX模式）');
         },
         
         
@@ -171,14 +175,16 @@ document.addEventListener('DOMContentLoaded', function() {
         if (e.persisted) {
             
             setTimeout(() => {
-                window.BlogStats.updateDisplay();
+                if (window.BlogStats) {
+                    window.BlogStats.updateDisplay();
+                }
             }, 50);
         }
     });
     
     
     window.addEventListener('beforeunload', function() {
-        console.log('页面即将离开，清除会话访问标记');
+        console.log('页面即将离开');
         
         
     });
@@ -217,16 +223,21 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
         keys.forEach(key => localStorage.removeItem(key));
-        sessionStorage.clear(); 
+        
+        
+        window.sessionPageVisited = {};
+        window.pageViewCounted = false;
         
         console.log('已清除所有统计数据，共清除', keys.length, '条记录');
-        window.BlogStats.updateDisplay();
+        if (window.BlogStats) {
+            window.BlogStats.updateDisplay();
+        }
     };
     
 })();
 </script>
     </head>
-    <body class="template-archives">
+    <body class="resume-page article-page">
     <script>
         (function() {
             const colorSchemeKey = 'StackColorScheme';
@@ -442,277 +453,172 @@ document.addEventListener('DOMContentLoaded', function() {
     </ol>
 </aside>
 
+    <aside class="sidebar right-sidebar sticky">
+        
+            
+                
+            
+        
+    </aside>
+
+
             <main class="main full-width">
-    <header>
-        <h2 class="section-title">Categories</h2>
-        <div class="subsection-list">
-            <div class="article-list--tile">
-                
-                    
-<article class="has-image">
-    <a href="/categories/test/">
+    <div class="resume-container">
         
-        
-            <div class="article-image">
-                <img src="/categories/test/hutomo-abrianto-l2jk-uxb1BY-unsplash.bec89fe99958d89413edc0f93688bdd6_hu12733615224671643161.jpg" 
-                        width="250" 
-                        height="150" 
-                        loading="lazy"
-                        alt="Featured image of post Test"
-                        data-key="test" 
-                        data-hash="md5-vsif6ZlY2JQT7cD5Noi91g==">
+        <div class="resume-header">
+            <div class="resume-photo">
                 
+                
+                    <img src="/img/TX.png" alt="个人照片" class="profile-photo">
+                
+            </div>
+            
+            <div class="resume-basic-info">
+                <h1 class="resume-name">归档</h1>
+                <div class="resume-actions">
+                    <button onclick="window.print()" class="btn-download">
+                        <i class="fas fa-print"></i> 打印简历
+                    </button>
+                    <a href="#" onclick="generatePDF()" class="btn-download">
+                        <i class="fas fa-download"></i> 下载PDF
+                    </a>
+                    <button onclick="toggleEditMode()" class="btn-edit">
+                        <i class="fas fa-edit"></i> 编辑模式
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        
+        <div class="resume-meta">
+            <div class="article-details">
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/archives/">归档</a>
+        </h2>
+    
+        
+    </div>
+
+    
+    
+    
+    
+    
+    <footer class="article-time">
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published">
+                    创建时间：2024-09-29</time>
             </div>
         
 
-        <div class="article-details">
-            <h2 class="article-title">Test</h2>
-        </div>
-    </a>
-</article>
+        
 
+        
+        
+        <div class="viewCount">
+            <?xml version="1.0" standalone="no"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"><svg t="1751341158288" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="5861" xmlns:xlink="http://www.w3.org/1999/xlink" width="200" height="200"><path d="M505.862 220.138c-247.754 0-448.598 296.135-448.598 296.135s200.844 296.135 448.598 296.135S954.46 516.273 954.46 516.273 753.616 220.138 505.862 220.138z m268.939 391.274c-42.507 38.764-85.315 69.415-127.236 91.1-49.081 25.389-96.758 38.262-141.703 38.262-44.53 0-91.75-12.639-140.346-37.564-41.62-21.346-84.146-51.561-126.399-89.805-38.962-35.266-70.55-70.996-91.903-97.18 20.833-25.553 51.524-60.271 89.708-95.095 42.507-38.764 85.315-69.415 127.236-91.1 49.082-25.389 96.758-38.262 141.703-38.262 44.53 0 91.749 12.639 140.346 37.564 41.62 21.346 84.146 51.562 126.398 89.805 38.962 35.266 70.551 70.996 91.904 97.18-20.833 25.553-51.523 60.272-89.708 95.095z" p-id="5862" fill="#8a8a8a"></path><path d="M661.102 438.722c0 37.454-30.361 67.816-67.816 67.816s-67.815-30.361-67.815-67.816c0-37.453 30.361-67.816 67.815-67.816 0.348 0 0.69 0.021 1.037 0.027-22.651-11.842-48.411-18.546-75.741-18.546-90.424 0-163.729 73.304-163.729 163.729 0 90.424 73.305 163.728 163.729 163.728 90.425 0 163.729-73.304 163.729-163.728 0-29.381-7.745-56.95-21.296-80.788 0.056 1.125 0.087 2.255 0.087 3.394z" p-id="5863" fill="#8a8a8a"></path></svg>
+            <time class="article-time--reading">
                 
-                    
-<article class="">
-    <a href="/categories/%E6%B5%8B%E8%AF%95/">
-        
-        
-
-        <div class="article-details">
-            <h2 class="article-title">测试</h2>
+                <span class="page-view-count" data-url="/archives/">0</span>次
+            </time>
         </div>
-    </a>
-</article>
+    </footer>
+    
 
-                
-                    
-<article class="">
-    <a href="/categories/syntax/">
-        
-        
+    
+</div>
 
-        <div class="article-details">
-            <h2 class="article-title">Syntax</h2>
         </div>
-    </a>
-</article>
 
-                
+        
+        <article class="resume-content">
+            
+        </article>
+
+        
+        <div id="pdf-content" style="display: none;">
+            <div class="pdf-header">
+                <div class="pdf-photo">
                     
-<article class="">
-    <a href="/categories/themes/">
-        
-        
-
-        <div class="article-details">
-            <h2 class="article-title">Themes</h2>
-        </div>
-    </a>
-</article>
-
-                
+                        <img src="/img/TX.png" alt="个人照片">
                     
-<article class="">
-    <a href="/categories/test-with-whitespaces/">
-        
-        
-
-        <div class="article-details">
-            <h2 class="article-title">Test With Whitespaces</h2>
-        </div>
-    </a>
-</article>
-
+                </div>
+                <div class="pdf-basic-info">
+                    <h1>归档</h1>
+                    <p>生成时间: 2025年07月02日</p>
+                </div>
+            </div>
+            <div class="pdf-body">
                 
             </div>
-        </div>
-        
-    </header>
-
-    
-    
-    
-
-    
-    
-    <div class="archives-group" id="2024">
-        <h2 class="archives-date section-title"><a href="/archives/#2024">2024</a></h2>
-        <div class="article-list--compact">
-            
-                <article>
-    <a href="/p/%E7%BA%BF%E6%80%A7%E6%96%B9%E7%A8%8B%E7%BB%84%E7%9A%84sor%E8%BF%AD%E4%BB%A3%E6%B3%95/">
-        <div class="article-details">
-            <h2 class="article-title">线性方程组的SOR迭代法</h2>
-            <footer class="article-time">
-                <div style="display: flex; flex-wrap: wrap; gap: 1em; align-items: center;">
-                    <time datetime='2024-10-01T11:05:58&#43;08:00'>
-                        创建：2024-10-01</time><span class="page-view-count" data-url="/p/%E7%BA%BF%E6%80%A7%E6%96%B9%E7%A8%8B%E7%BB%84%E7%9A%84sor%E8%BF%AD%E4%BB%A3%E6%B3%95/">
-                        阅读：<span class="view-count-number">0</span>次
-                    </span>
-                </div>
-            </footer>
-        </div>
-    </a>
-</article>
-
-            
-                <article>
-    <a href="/p/myfirstblog/">
-        <div class="article-details">
-            <h2 class="article-title">MyFirstBlog</h2>
-            <footer class="article-time">
-                <div style="display: flex; flex-wrap: wrap; gap: 1em; align-items: center;">
-                    <time datetime='2024-09-29T11:05:58&#43;08:00'>
-                        创建：2024-09-29</time><span class="page-view-count" data-url="/p/myfirstblog/">
-                        阅读：<span class="view-count-number">0</span>次
-                    </span>
-                </div>
-            </footer>
-        </div>
-    </a>
-</article>
-
-            
         </div>
     </div>
+
     
-    
-    <div class="archives-group" id="2020">
-        <h2 class="archives-date section-title"><a href="/archives/#2020">2020</a></h2>
-        <div class="article-list--compact">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <script>
+        function generatePDF() {
+            const element = document.getElementById('pdf-content');
+            const opt = {
+                margin: [0.5, 0.5, 0.5, 0.5],
+                filename: '归档_简历_20250702.pdf',
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: { 
+                    scale: 2,
+                    useCORS: true,
+                    allowTaint: true 
+                },
+                jsPDF: { 
+                    unit: 'in', 
+                    format: 'a4', 
+                    orientation: 'portrait' 
+                }
+            };
             
-                <article>
-    <a href="/p/test-chinese/">
-        <div class="article-details">
-            <h2 class="article-title">Chinese Test</h2>
-            <footer class="article-time">
-                <div style="display: flex; flex-wrap: wrap; gap: 1em; align-items: center;">
-                    <time datetime='2020-09-09T00:00:00Z'>
-                        创建：2020-09-09</time><span class="page-view-count" data-url="/p/test-chinese/">
-                        阅读：<span class="view-count-number">0</span>次
-                    </span>
-                </div>
-            </footer>
-        </div>
-            <div class="article-image">
-                <img src="/p/test-chinese/helena-hertz-wWZzXlDpMog-unsplash_hu4699868770670889127.jpg" 
-                        width="120"
-                        height="120" 
-                        alt="Chinese Test"
-                        loading="lazy">
+            
+            element.style.display = 'block';
+            
+            html2pdf().set(opt).from(element).save().then(() => {
                 
-            </div>
+                element.style.display = 'none';
+            });
+        }
+
+        function toggleEditMode() {
+            const content = document.querySelector('.resume-content');
+            if (content.contentEditable === 'true') {
+                content.contentEditable = 'false';
+                content.classList.remove('edit-mode');
+                alert('编辑模式已关闭');
+            } else {
+                content.contentEditable = 'true';
+                content.classList.add('edit-mode');
+                alert('编辑模式已开启，您可以直接编辑内容');
+            }
+        }
+
         
-    </a>
-</article>
+        window.addEventListener('beforeprint', function() {
+            document.body.classList.add('printing');
+        });
 
-            
-        </div>
-    </div>
-    
-    
-    <div class="archives-group" id="2019">
-        <h2 class="archives-date section-title"><a href="/archives/#2019">2019</a></h2>
-        <div class="article-list--compact">
-            
-                <article>
-    <a href="/p/markdown-syntax-guide/">
-        <div class="article-details">
-            <h2 class="article-title">Markdown Syntax Guide</h2>
-            <footer class="article-time">
-                <div style="display: flex; flex-wrap: wrap; gap: 1em; align-items: center;">
-                    <time datetime='2019-03-11T00:00:00Z'>
-                        创建：2019-03-11</time><span class="page-view-count" data-url="/p/markdown-syntax-guide/">
-                        阅读：<span class="view-count-number">0</span>次
-                    </span>
-                </div>
-            </footer>
-        </div>
-            <div class="article-image">
-                <img src="/p/markdown-syntax-guide/pawel-czerwinski-8uZPynIu-rQ-unsplash_hu6307248181568134095.jpg" 
-                        width="120"
-                        height="120" 
-                        alt="Markdown Syntax Guide"
-                        loading="lazy">
-                
-            </div>
-        
-    </a>
-</article>
-
-            
-                <article>
-    <a href="/p/placeholder-text/">
-        <div class="article-details">
-            <h2 class="article-title">Placeholder Text</h2>
-            <footer class="article-time">
-                <div style="display: flex; flex-wrap: wrap; gap: 1em; align-items: center;">
-                    <time datetime='2019-03-09T00:00:00Z'>
-                        创建：2019-03-09</time><span class="page-view-count" data-url="/p/placeholder-text/">
-                        阅读：<span class="view-count-number">0</span>次
-                    </span>
-                </div>
-            </footer>
-        </div>
-            <div class="article-image">
-                <img src="/p/placeholder-text/matt-le-SJSpo9hQf7s-unsplash_hu10664154974910995856.jpg" 
-                        width="120"
-                        height="120" 
-                        alt="Placeholder Text"
-                        loading="lazy">
-                
-            </div>
-        
-    </a>
-</article>
-
-            
-                <article>
-    <a href="/p/math-typesetting/">
-        <div class="article-details">
-            <h2 class="article-title">Math Typesetting</h2>
-            <footer class="article-time">
-                <div style="display: flex; flex-wrap: wrap; gap: 1em; align-items: center;">
-                    <time datetime='2019-03-08T00:00:00Z'>
-                        创建：2019-03-08</time><span class="page-view-count" data-url="/p/math-typesetting/">
-                        阅读：<span class="view-count-number">0</span>次
-                    </span>
-                </div>
-            </footer>
-        </div>
-    </a>
-</article>
-
-            
-                <article>
-    <a href="/p/emoji-support/">
-        <div class="article-details">
-            <h2 class="article-title">Emoji Support</h2>
-            <footer class="article-time">
-                <div style="display: flex; flex-wrap: wrap; gap: 1em; align-items: center;">
-                    <time datetime='2019-03-05T00:00:00Z'>
-                        创建：2019-03-05</time><span class="page-view-count" data-url="/p/emoji-support/">
-                        阅读：<span class="view-count-number">0</span>次
-                    </span>
-                </div>
-            </footer>
-        </div>
-            <div class="article-image">
-                <img src="/p/emoji-support/the-creative-exchange-d2zvqp3fpro-unsplash_hu5876398126655421130.jpg" 
-                        width="120"
-                        height="120" 
-                        alt="Emoji Support"
-                        loading="lazy">
-                
-            </div>
-        
-    </a>
-</article>
-
-            
-        </div>
-    </div>
-    
+        window.addEventListener('afterprint', function() {
+            document.body.classList.remove('printing');
+        });
+    </script>
 
     <footer class="site-footer">
     <section class="copyright">
@@ -752,21 +658,22 @@ document.addEventListener('DOMContentLoaded', function() {
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.css">
 <script src="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/meting@2/dist/Meting.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/pjax/pjax.min.js"></script>
 
 
-<meting-js 
-    server="netease" 
-    type="playlist"
-    fixed="true" 
-    id="2777427516"
-    autoplay="false"
-    theme="#FADFA3"
-    loop="all"
-    order="list"
-    volume="0.7"
-    lrctype="3">
-</meting-js>
+<div id="music-player-container" style="position: fixed; bottom: 0; left: 0; right: 0; z-index: 9999;">
+    <meting-js 
+        server="netease" 
+        type="playlist"
+        fixed="true" 
+        id="2777427516"
+        autoplay="false"
+        theme="#FADFA3"
+        loop="all"
+        order="list"
+        volume="0.7"
+        lrctype="3">
+    </meting-js>
+</div>
 
 <script>
 
@@ -777,9 +684,11 @@ function saveState() {
             index: player.aplayer.list.index,
             currentTime: player.aplayer.audio.currentTime,
             paused: player.aplayer.paused,
+            volume: player.aplayer.volume,
             timestamp: Date.now()
         };
         localStorage.setItem('playerState', JSON.stringify(state));
+        console.log('音乐状态已保存:', state);
     }
 }
 
@@ -787,113 +696,66 @@ function restoreState() {
     const saved = localStorage.getItem('playerState');
     if (!saved) return;
     
-    const state = JSON.parse(saved);
-    if (Date.now() - state.timestamp > 3600000) return; 
-    
-    setTimeout(() => {
-        const player = document.querySelector('.aplayer');
-        if (player && player.aplayer) {
-            player.aplayer.list.switch(state.index);
-            setTimeout(() => {
-                player.aplayer.seek(state.currentTime);
-                if (!state.paused) player.aplayer.play();
-            }, 500);
-        }
-    }, 1000);
+    try {
+        const state = JSON.parse(saved);
+        if (Date.now() - state.timestamp > 3600000) return; 
+        
+        setTimeout(() => {
+            const player = document.querySelector('.aplayer');
+            if (player && player.aplayer) {
+                if (state.index !== undefined) {
+                    player.aplayer.list.switch(state.index);
+                }
+                setTimeout(() => {
+                    if (state.currentTime) {
+                        player.aplayer.seek(state.currentTime);
+                    }
+                    if (state.volume !== undefined) {
+                        player.aplayer.volume(state.volume);
+                    }
+                    if (!state.paused) {
+                        player.aplayer.play();
+                    }
+                    console.log('音乐状态已恢复:', state);
+                }, 500);
+            }
+        }, 1000);
+    } catch (e) {
+        console.error('恢复音乐状态失败:', e);
+    }
 }
 
 
-const pjax = new Pjax({
-    selectors: ['.main-container'],
-    cacheBust: false
-});
-
-
-window.addEventListener('load', restoreState);
-window.addEventListener('beforeunload', saveState);
-setInterval(saveState, 3000);
-
-
-document.addEventListener('pjax:send', () => {
+function initMusicPersistence() {
     
-    saveState();
-    console.log('PJAX: 保存音乐播放状态');
-});
-
-document.addEventListener('pjax:complete', () => {
-    
-    restoreState();
+    window.addEventListener('beforeunload', saveState);
     
     
-    if (window.Stack) window.Stack.init();
-    if (window.BlogStats && !window.BlogStats.isInitialized) {
-        window.BlogStats.init();
+    setInterval(saveState, 5000);
+    
+    
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', restoreState);
+    } else {
+        restoreState();
     }
     
-    console.log('PJAX: 页面跳转完成，重新初始化系统');
-});
-
-
-document.addEventListener('pjax:start', () => {
     
-    window.pageViewCounted = false;
-    console.log('PJAX: 重置访问计数标记');
-});
-</script>
-<script src="https://cdn.jsdelivr.net/npm/pjax/pjax.js"></script>
-<script>
-	var pjax = new Pjax({
-        selectors: [".main-container"],
-        cacheBust: false
-	})
-
-	pjax._handleResponse = pjax.handleResponse;
-
-	pjax.handleResponse = function(responseText, request, href, options) {
-		if (request.responseText.match("<html")) {
-            
-            let newDom = new DOMParser().parseFromString(responseText, 'text/html');
-            
-            let bodyClass = newDom.body.className;
-            document.body.setAttribute("class", bodyClass)
-            
-            pjax._handleResponse(responseText, request, href, options);
-        } else {
-            
+    const checkPlayer = setInterval(() => {
+        const player = document.querySelector('.aplayer');
+        if (player && player.aplayer) {
+            clearInterval(checkPlayer);
+            restoreState();
+            console.log('音乐播放器已加载，状态恢复完成');
         }
-	}
-
+    }, 500);
     
-    document.addEventListener('pjax:send', () => {
-        console.log('PJAX: 开始页面跳转');
-        
-        window.pageViewCounted = false;
-    });
+    console.log('音乐持久化初始化完成');
+}
 
-    document.addEventListener('pjax:complete', () => {
-        console.log('PJAX: 页面跳转完成');
-        
-        
-        if (window.Stack) {
-            window.Stack.init();
-        }
-        
-        
-        if (window.BlogStats) {
-            setTimeout(() => {
-                window.BlogStats.updateDisplay();
-            }, 100);
-        }
-        
-        
-        if (window.MathJax && MathJax.typesetPromise) {
-            MathJax.typesetPromise().then(() => {
-                console.log('PJAX: MathJax 重新渲染完成');
-            }).catch((err) => console.log('PJAX: MathJax 渲染错误:', err));
-        }
-    });
+
+initMusicPersistence();
 </script>
-
 
 <script>
 

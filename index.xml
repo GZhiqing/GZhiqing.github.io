@@ -7,7 +7,7 @@
         <generator>Hugo -- gohugo.io</generator>
         <language>zh-cn</language>
         <copyright>GZQBLOG</copyright>
-        <lastBuildDate>Fri, 20 Dec 2024 12:00:00 +0800</lastBuildDate><atom:link href="https://GZhiqing.github.io/index.xml" rel="self" type="application/rss+xml" /><item>
+        <lastBuildDate>Wed, 02 Jul 2025 12:00:00 +0800</lastBuildDate><atom:link href="https://GZhiqing.github.io/index.xml" rel="self" type="application/rss+xml" /><item>
         <title>线性方程组的SOR迭代法</title>
         <link>https://GZhiqing.github.io/p/%E7%BA%BF%E6%80%A7%E6%96%B9%E7%A8%8B%E7%BB%84%E7%9A%84sor%E8%BF%AD%E4%BB%A3%E6%B3%95/</link>
         <pubDate>Tue, 01 Oct 2024 11:05:58 +0800</pubDate>
@@ -430,76 +430,83 @@ $$&lt;p&gt;
 </description>
         </item>
         <item>
-        <title>MyFirstBlog</title>
-        <link>https://GZhiqing.github.io/p/myfirstblog/</link>
-        <pubDate>Sun, 29 Sep 2024 11:05:58 +0800</pubDate>
-        
-        <guid>https://GZhiqing.github.io/p/myfirstblog/</guid>
-        <description>&lt;h1 id=&#34;这是我的第一个博客&#34;&gt;这是我的第一个博客
-&lt;/h1&gt;&lt;h2 id=&#34;这是一个测试&#34;&gt;这是一个测试
-&lt;/h2&gt;</description>
-        </item>
-        <item>
-        <title>归档</title>
-        <link>https://GZhiqing.github.io/archives/</link>
-        <pubDate>Sun, 29 Sep 2024 00:00:00 +0000</pubDate>
-        
-        <guid>https://GZhiqing.github.io/archives/</guid>
-        <description></description>
-        </item>
-        <item>
-        <title>搜索</title>
-        <link>https://GZhiqing.github.io/search/</link>
-        <pubDate>Sun, 29 Sep 2024 00:00:00 +0000</pubDate>
-        
-        <guid>https://GZhiqing.github.io/search/</guid>
-        <description></description>
-        </item>
-        <item>
         <title>简历</title>
         <link>https://GZhiqing.github.io/%E7%AE%80%E5%8E%86/</link>
-        <pubDate>Mon, 01 Jan 2024 00:00:00 +0800</pubDate>
+        <pubDate>Tue, 01 Oct 2024 00:00:00 +0800</pubDate>
         
         <guid>https://GZhiqing.github.io/%E7%AE%80%E5%8E%86/</guid>
-        <description>&lt;font face=&#34;Times New Roman&#34; English&gt;
-&lt;blockquote&gt;
-&lt;h2 id=&#34;基础信息&#34;&gt;基础信息
+        <description>&lt;blockquote&gt;
+&lt;h2 id=&#34;-基础信息&#34;&gt;📋 基础信息
 &lt;/h2&gt;&lt;/blockquote&gt;
-&lt;p&gt;&lt;strong&gt;姓名&lt;/strong&gt;：&lt;strong&gt;郭直清&lt;/strong&gt; &lt;span style=&#34;margin-left: 16em;&#34;&gt;&lt;/span&gt;
-&lt;strong&gt;性&lt;span style=&#34;margin-left: 0.8em;&#34;&gt;&lt;/span&gt;别&lt;/strong&gt;：&lt;strong&gt;男&lt;/strong&gt; &lt;br&gt;
-&lt;strong&gt;电话&lt;/strong&gt;：&lt;strong&gt;(+86)18342832143&lt;/strong&gt; &lt;span style=&#34;margin-left: 11.25em;&#34;&gt;&lt;/span&gt;
-&lt;strong&gt;E-mail&lt;/strong&gt;：&lt;strong&gt;&lt;a class=&#34;link&#34; href=&#34;mailto:Zhiqing_GUO@126.com&#34; &gt;Zhiqing_GUO@126.com&lt;/a&gt;&lt;/strong&gt; &lt;br&gt;
-&lt;strong&gt;研究方向&lt;/strong&gt;：露天开采理论与技术、智慧矿山、最优化理论与控制、数学建模与机器学习&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;姓名:&lt;/strong&gt; 郭直清&lt;br&gt;
+&lt;strong&gt;性别:&lt;/strong&gt; 男&lt;br&gt;
+&lt;strong&gt;电话:&lt;/strong&gt; (+86)18342832143&lt;br&gt;
+&lt;strong&gt;邮箱:&lt;/strong&gt; &lt;a class=&#34;link&#34; href=&#34;mailto:Zhiqing_GUO@126.com&#34; &gt;Zhiqing_GUO@126.com&lt;/a&gt;&lt;br&gt;
+&lt;strong&gt;研究方向:&lt;/strong&gt; 露天开采理论与技术、智慧矿山、最优化理论与控制、数学建模与机器学习&lt;/p&gt;
+&lt;hr&gt;
 &lt;blockquote&gt;
-&lt;h2 id=&#34;教育背景&#34;&gt;教育背景
+&lt;h2 id=&#34;-教育背景&#34;&gt;🎓 教育背景
 &lt;/h2&gt;&lt;/blockquote&gt;
-&lt;p&gt;&lt;strong&gt;2022.09-2026.07 &lt;span style=&#34;margin-left: 2.25em;&#34;&gt;&lt;/span&gt; 辽宁工程技术大学 &lt;span style=&#34;margin-left: 2.25em;&#34;&gt;&lt;/span&gt; 矿业工程(露天开采方向)&lt;span style=&#34;margin-left: 2em;&#34;&gt;&lt;/span&gt;  导师：刘光伟 教授&lt;span style=&#34;margin-left:2em;&#34;&gt;&lt;/span&gt;  博士&lt;/strong&gt;&lt;br&gt;
-&lt;strong&gt;2019.09-2022.07 &lt;span style=&#34;margin-left: 2.25em;&#34;&gt;&lt;/span&gt; 辽宁工程技术大学 &lt;span style=&#34;margin-left: 2.25em;&#34;&gt;&lt;/span&gt; 应用数学(人工智能方向)&lt;span style=&#34;margin-left: 2em;&#34;&gt;&lt;/span&gt;  导师：刘威 副教授&lt;span style=&#34;margin-left:2em;&#34;&gt;&lt;/span&gt;  硕士&lt;/strong&gt;&lt;br&gt;
-&lt;strong&gt;2015.09-2019.07 &lt;span style=&#34;margin-left: 2.25em;&#34;&gt;&lt;/span&gt; 辽宁工程技术大学 &lt;span style=&#34;margin-left: 2.25em;&#34;&gt;&lt;/span&gt; 数学与应用数学&lt;span style=&#34;margin-left: 16.15em;&#34;&gt;&lt;/span&gt;  学士&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;博士学位&lt;/strong&gt; | 2022.09-2026.07 | 辽宁工程技术大学&lt;br&gt;
+专业：矿业工程(露天开采方向) | 导师：刘光伟 教授&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;硕士学位&lt;/strong&gt; | 2019.09-2022.07 | 辽宁工程技术大学&lt;br&gt;
+专业：应用数学(人工智能方向) | 导师：刘威 副教授&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;学士学位&lt;/strong&gt; | 2015.09-2019.07 | 辽宁工程技术大学&lt;br&gt;
+专业：数学与应用数学&lt;/p&gt;
+&lt;hr&gt;
 &lt;blockquote&gt;
-&lt;h2 id=&#34;科研论文&#34;&gt;科研论文
+&lt;h2 id=&#34;-科研论文&#34;&gt;📝 科研论文
 &lt;/h2&gt;&lt;/blockquote&gt;
 &lt;h3 id=&#34;中文论文&#34;&gt;中文论文
 &lt;/h3&gt;&lt;ol&gt;
-&lt;li&gt;刘威*,&lt;strong&gt;郭直清&lt;/strong&gt;,王东,刘光伟,姜丰,牛英杰,马灵潇. 改进鲸鱼算法及其在浅层神经网络搜索中的权值阈值优化[J]. 控制与决策, 2023, 38(4): 1144-1152. (&lt;strong&gt;EI检索 北大核心&lt;/strong&gt;)&lt;/li&gt;
-&lt;li&gt;刘威*,&lt;strong&gt;郭直清&lt;/strong&gt;,黄敏,白润才,徐煦,王东,刘光伟,赵景昌. 基于MCMC算法的露天矿典型设备故障预测方法研究[J]. 煤炭科学技术, 2019, 47(10): 51-57. (&lt;strong&gt;EI检索 北大核心&lt;/strong&gt;)&lt;/li&gt;
-&lt;li&gt;刘威*,&lt;strong&gt;郭直清&lt;/strong&gt;,姜丰,刘光伟,靳宝,王东.协同围攻策略改进的灰狼算法及其PID参数优化[J]. 计算机科学与探索, 2023, 17(3): 620-634. (&lt;strong&gt;北大核心 CSCD核心&lt;/strong&gt;)&lt;/li&gt;
-&lt;li&gt;刘威*,&lt;strong&gt;郭直清&lt;/strong&gt;,刘光伟,靳宝,王东. 融合振幅随机补偿与步长演变机制的改进原子搜索优化算法[J].智能系统学报, 2022, 17(3): 602-616. (&lt;strong&gt;北大核心 CSCD核心&lt;/strong&gt;)&lt;/li&gt;
-&lt;li&gt;刘光伟,&lt;strong&gt;郭直清*&lt;/strong&gt;,刘威.基于GJO-MLP的露天矿边坡变形预测模型[J]. 工矿自动化, 2023, 49(9): 155-166. (&lt;strong&gt;北大核心 CSCD扩展&lt;/strong&gt;)&lt;/li&gt;
-&lt;li&gt;刘威*,付杰,周定宁,王薪予,成秘,黄敏,&lt;strong&gt;郭直清&lt;/strong&gt;,靳宝,牛英杰.基于改进郊狼优化算法的浅层神经进化方法研究[J]. 计算机学报, 2021, 44(6): 1200-1213. (&lt;strong&gt;EI检索 北大核心&lt;/strong&gt;)&lt;/li&gt;
-&lt;li&gt;刘威*,靳宝,周璇,付杰,王薪予,&lt;strong&gt;郭直清&lt;/strong&gt;,牛英杰.基于特征融合及自适应模型更新的相关滤波目标跟踪算法[J]. 智能系统学报, 2020, 15(4): 714-721. (&lt;strong&gt;北大核心 CSCD核心&lt;/strong&gt;)&lt;/li&gt;
-&lt;li&gt;李在友,孙艳斌,王晓光,陈永,刘光伟*,&lt;strong&gt;郭直清&lt;/strong&gt;.基于改进被囊群算法的露天矿无人驾驶卡车运输调度[J]. 工矿自动化, 2022, 48(6): 87-94+127. (&lt;strong&gt;北大核心 CSCD扩展&lt;/strong&gt;)&lt;/li&gt;
-&lt;li&gt;张津鹏,李林,刘光伟*,&lt;strong&gt;郭直清&lt;/strong&gt;,郭伟强.基于IGWO-BPNN的露天矿卡车故障预测方法[J]. 煤炭工程, 2023, 55(12): 114-120. (&lt;strong&gt;北大核心&lt;/strong&gt;)&lt;/li&gt;
-&lt;li&gt;刘威*,王薪予,魏宪,&lt;strong&gt;郭直清&lt;/strong&gt;,靳宝,牛英杰,马灵潇,赵保钦.基于自适应图的半监督图像分类方法[J]. 辽宁工程技术大学学报(自然科学版), 2023, 42(1): 119-128. (&lt;strong&gt;北大核心&lt;/strong&gt;)&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;刘威*,&lt;strong&gt;郭直清&lt;/strong&gt;,王东,刘光伟,姜丰,牛英杰,马灵潇. 改进鲸鱼算法及其在浅层神经网络搜索中的权值阈值优化[J]. 控制与决策, 2023, 38(4): 1144-1152. &lt;strong&gt;(EI检索 北大核心)&lt;/strong&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;刘威*,&lt;strong&gt;郭直清&lt;/strong&gt;,黄敏,白润才,徐煦,王东,刘光伟,赵景昌. 基于MCMC算法的露天矿典型设备故障预测方法研究[J]. 煤炭科学技术, 2019, 47(10): 51-57. &lt;strong&gt;(EI检索 北大核心)&lt;/strong&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;刘威*,&lt;strong&gt;郭直清&lt;/strong&gt;,姜丰,刘光伟,靳宝,王东.协同围攻策略改进的灰狼算法及其PID参数优化[J]. 计算机科学与探索, 2023, 17(3): 620-634. &lt;strong&gt;(北大核心 CSCD核心)&lt;/strong&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;刘威*,&lt;strong&gt;郭直清&lt;/strong&gt;,刘光伟,靳宝,王东. 融合振幅随机补偿与步长演变机制的改进原子搜索优化算法[J].智能系统学报, 2022, 17(3): 602-616. &lt;strong&gt;(北大核心 CSCD核心)&lt;/strong&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;刘光伟,&lt;strong&gt;郭直清*&lt;/strong&gt;,刘威.基于GJO-MLP的露天矿边坡变形预测模型[J]. 工矿自动化, 2023, 49(9): 155-166. &lt;strong&gt;(北大核心 CSCD扩展)&lt;/strong&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;刘威*,付杰,周定宁,王薪予,成秘,黄敏,&lt;strong&gt;郭直清&lt;/strong&gt;,靳宝,牛英杰.基于改进郊狼优化算法的浅层神经进化方法研究[J]. 计算机学报, 2021, 44(6): 1200-1213. &lt;strong&gt;(EI检索 北大核心)&lt;/strong&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;刘威*,靳宝,周璇,付杰,王薪予,&lt;strong&gt;郭直清&lt;/strong&gt;,牛英杰.基于特征融合及自适应模型更新的相关滤波目标跟踪算法[J]. 智能系统学报, 2020, 15(4): 714-721. &lt;strong&gt;(北大核心 CSCD核心)&lt;/strong&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;李在友,孙艳斌,王晓光,陈永,刘光伟*,&lt;strong&gt;郭直清&lt;/strong&gt;.基于改进被囊群算法的露天矿无人驾驶卡车运输调度[J]. 工矿自动化, 2022, 48(6): 87-94+127. &lt;strong&gt;(北大核心 CSCD扩展)&lt;/strong&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;张津鹏,李林,刘光伟*,&lt;strong&gt;郭直清&lt;/strong&gt;,郭伟强.基于IGWO-BPNN的露天矿卡车故障预测方法[J]. 煤炭工程, 2023, 55(12): 114-120. &lt;strong&gt;(北大核心)&lt;/strong&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;刘威*,王薪予,魏宪,&lt;strong&gt;郭直清&lt;/strong&gt;,靳宝,牛英杰,马灵潇,赵保钦.基于自适应图的半监督图像分类方法[J]. 辽宁工程技术大学学报(自然科学版), 2023, 42(1): 119-128. &lt;strong&gt;(北大核心)&lt;/strong&gt;&lt;/p&gt;
+&lt;/li&gt;
 &lt;/ol&gt;
 &lt;h3 id=&#34;英文论文&#34;&gt;英文论文
 &lt;/h3&gt;&lt;ol&gt;
-&lt;li&gt;&lt;strong&gt;Guo Z&lt;/strong&gt;, Liu G*, Jiang F. Chinese Pangolin Optimizer: a novel bio-inspired metaheuristic for solving optimization problems[J]. The Journal of Supercomputing, 2025, 81(4): 517. (SCI检索 CCF C类期刊 中科院3区)&lt;/li&gt;
-&lt;li&gt;Liu G, &lt;strong&gt;Guo Z*&lt;/strong&gt;, Liu W, F Jiang, Fu E. A feature selection method based on the Golden Jackal-Grey Wolf Hybrid Optimization Algorithm[J]. Plos one, 2024, 19(1): e0295579. (SCI检索 中科院3区)&lt;/li&gt;
-&lt;li&gt;Liu G, &lt;strong&gt;Guo Z*&lt;/strong&gt;, Liu W, Cao B, Chai S, Wang C. MSHHOTSA: A variant of tunicate swarm algorithm combining multi-strategy mechanism and hybrid Harris optimization[J]. Plos one, 2023, 18(8): e0290117. (SCI检索 中科院3区)&lt;/li&gt;
-&lt;li&gt;Liu W, &lt;strong&gt;Guo Z*&lt;/strong&gt;, Jiang F, Liu G, Wang D, Ni Z. Improved WOA and its application in feature selection[J]. Plos one, 2022, 17(5): e0267041. (SCI检索 中科院3区)&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;Guo Z&lt;/strong&gt;, Liu G*, Jiang F. Chinese Pangolin Optimizer: a novel bio-inspired metaheuristic for solving optimization problems[J]. The Journal of Supercomputing, 2025, 81(4): 517. &lt;strong&gt;(SCI检索 CCF C类期刊 中科院3区)&lt;/strong&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Liu G, &lt;strong&gt;Guo Z*&lt;/strong&gt;, Liu W, F Jiang, Fu E. A feature selection method based on the Golden Jackal-Grey Wolf Hybrid Optimization Algorithm[J]. Plos one, 2024, 19(1): e0295579. &lt;strong&gt;(SCI检索 中科院3区)&lt;/strong&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Liu G, &lt;strong&gt;Guo Z*&lt;/strong&gt;, Liu W, Cao B, Chai S, Wang C. MSHHOTSA: A variant of tunicate swarm algorithm combining multi-strategy mechanism and hybrid Harris optimization[J]. Plos one, 2023, 18(8): e0290117. &lt;strong&gt;(SCI检索 中科院3区)&lt;/strong&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Liu W, &lt;strong&gt;Guo Z*&lt;/strong&gt;, Jiang F, Liu G, Wang D, Ni Z. Improved WOA and its application in feature selection[J]. Plos one, 2022, 17(5): e0267041. &lt;strong&gt;(SCI检索 中科院3区)&lt;/strong&gt;&lt;/p&gt;
+&lt;/li&gt;
 &lt;/ol&gt;
-&lt;h2 id=&#34;学术兼职&#34;&gt;学术兼职
+&lt;hr&gt;
+&lt;h2 id=&#34;-学术兼职&#34;&gt;📖 学术兼职
 &lt;/h2&gt;&lt;ol&gt;
 &lt;li&gt;&lt;strong&gt;《Archives of Computational Methods in Engineering》&lt;/strong&gt; 期刊审稿人&lt;/li&gt;
 &lt;li&gt;&lt;strong&gt;《The Journal of Supercomputing (TJSC)》&lt;/strong&gt; 期刊审稿人&lt;/li&gt;
@@ -507,6 +514,7 @@ $$&lt;p&gt;
 &lt;li&gt;&lt;strong&gt;《Scientific Reports》&lt;/strong&gt; 期刊审稿人&lt;/li&gt;
 &lt;li&gt;&lt;strong&gt;《PlosOne》&lt;/strong&gt; 期刊审稿人&lt;/li&gt;
 &lt;/ol&gt;
+&lt;hr&gt;
 &lt;blockquote&gt;
 &lt;h2 id=&#34;科研项目&#34;&gt;科研项目
 &lt;/h2&gt;&lt;/blockquote&gt;
@@ -610,6 +618,32 @@ $$&lt;p&gt;
 &lt;/font&gt;&lt;/li&gt;
 &lt;/ul&gt;
 </description>
+        </item>
+        <item>
+        <title>MyFirstBlog</title>
+        <link>https://GZhiqing.github.io/p/myfirstblog/</link>
+        <pubDate>Sun, 29 Sep 2024 11:05:58 +0800</pubDate>
+        
+        <guid>https://GZhiqing.github.io/p/myfirstblog/</guid>
+        <description>&lt;h1 id=&#34;这是我的第一个博客&#34;&gt;这是我的第一个博客
+&lt;/h1&gt;&lt;h2 id=&#34;这是一个测试&#34;&gt;这是一个测试
+&lt;/h2&gt;</description>
+        </item>
+        <item>
+        <title>归档</title>
+        <link>https://GZhiqing.github.io/archives/</link>
+        <pubDate>Sun, 29 Sep 2024 00:00:00 +0000</pubDate>
+        
+        <guid>https://GZhiqing.github.io/archives/</guid>
+        <description></description>
+        </item>
+        <item>
+        <title>搜索</title>
+        <link>https://GZhiqing.github.io/search/</link>
+        <pubDate>Sun, 29 Sep 2024 00:00:00 +0000</pubDate>
+        
+        <guid>https://GZhiqing.github.io/search/</guid>
+        <description></description>
         </item>
         <item>
         <title>Chinese Test</title>

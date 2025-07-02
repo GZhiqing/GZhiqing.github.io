@@ -6,11 +6,11 @@
 
 <link rel='canonical' href='https://GZhiqing.github.io/categories/%E6%B5%8B%E8%AF%95/'>
 
-<link rel="stylesheet" href="/scss/style.min.49536cecfa3fe166265c6eb8eef0851bfc47a0ae3c707a6dff69283e616b86c2.css"><meta property='og:title' content="Category: 测试 - GZhiqing_BLOG">
+<link rel="stylesheet" href="/scss/style.min.1ad883ce076dca4bc5437042b6dd8a4833be1b3def0b5e6558ea855400dfe5ad.css"><meta property='og:title' content="Category: 测试 - GZhiqing_BLOG">
 <meta property='og:description' content="GZhiqing_BLOG">
 <meta property='og:url' content='https://GZhiqing.github.io/categories/%E6%B5%8B%E8%AF%95/'>
 <meta property='og:site_name' content='GZhiqing_BLOG'>
-<meta property='og:type' content='website'><meta property='og:updated_time' content=' 2024-12-20T12:00:00&#43;08:00 '/>
+<meta property='og:type' content='website'><meta property='og:updated_time' content=' 2025-07-02T12:00:00&#43;08:00 '/>
 <meta name="twitter:title" content="Category: 测试 - GZhiqing_BLOG">
 <meta name="twitter:description" content="GZhiqing_BLOG"><link rel="alternate" type="application/rss&#43;xml" href="https://GZhiqing.github.io/categories/%E6%B5%8B%E8%AF%95/index.xml">
     <link rel="shortcut icon" href="/FX.svg" />
@@ -78,17 +78,21 @@ document.addEventListener('DOMContentLoaded', function() {
         
         increment: function(url) {
             const key = this.keyPrefix + this.encodeUrl(url);
-            const sessionKey = 'visited_' + this.encodeUrl(url);
+            const sessionKey = 'visited_' + this.encodeUrl(url) + '_' + Math.floor(Date.now() / 1000);
             
             
-            if (!sessionStorage.getItem(sessionKey)) {
+            if (!window.sessionPageVisited) {
+                window.sessionPageVisited = {};
+            }
+            
+            if (!window.sessionPageVisited[url]) {
                 const count = this.getCount(url) + 1;
                 localStorage.setItem(key, count.toString());
-                sessionStorage.setItem(sessionKey, 'true');
+                window.sessionPageVisited[url] = true;
                 console.log('访问计数增加:', url, '次数:', count);
                 return count;
             } else {
-                console.log('本次会话已访问过:', url, '不重复计数');
+                console.log('本次页面加载已访问过:', url, '不重复计数');
                 return this.getCount(url);
             }
         },
@@ -131,8 +135,8 @@ document.addEventListener('DOMContentLoaded', function() {
         
         
         handleNavigation: function() {
+            console.log('导航处理已启用（正常刷新模式）');
             
-            console.log('导航处理已启用（PJAX模式）');
         },
         
         
@@ -171,14 +175,16 @@ document.addEventListener('DOMContentLoaded', function() {
         if (e.persisted) {
             
             setTimeout(() => {
-                window.BlogStats.updateDisplay();
+                if (window.BlogStats) {
+                    window.BlogStats.updateDisplay();
+                }
             }, 50);
         }
     });
     
     
     window.addEventListener('beforeunload', function() {
-        console.log('页面即将离开，清除会话访问标记');
+        console.log('页面即将离开');
         
         
     });
@@ -217,10 +223,15 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
         keys.forEach(key => localStorage.removeItem(key));
-        sessionStorage.clear(); 
+        
+        
+        window.sessionPageVisited = {};
+        window.pageViewCounted = false;
         
         console.log('已清除所有统计数据，共清除', keys.length, '条记录');
-        window.BlogStats.updateDisplay();
+        if (window.BlogStats) {
+            window.BlogStats.updateDisplay();
+        }
     };
     
 })();
@@ -642,21 +653,22 @@ document.addEventListener('DOMContentLoaded', function() {
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.css">
 <script src="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/meting@2/dist/Meting.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/pjax/pjax.min.js"></script>
 
 
-<meting-js 
-    server="netease" 
-    type="playlist"
-    fixed="true" 
-    id="2777427516"
-    autoplay="false"
-    theme="#FADFA3"
-    loop="all"
-    order="list"
-    volume="0.7"
-    lrctype="3">
-</meting-js>
+<div id="music-player-container" style="position: fixed; bottom: 0; left: 0; right: 0; z-index: 9999;">
+    <meting-js 
+        server="netease" 
+        type="playlist"
+        fixed="true" 
+        id="2777427516"
+        autoplay="false"
+        theme="#FADFA3"
+        loop="all"
+        order="list"
+        volume="0.7"
+        lrctype="3">
+    </meting-js>
+</div>
 
 <script>
 
@@ -667,9 +679,11 @@ function saveState() {
             index: player.aplayer.list.index,
             currentTime: player.aplayer.audio.currentTime,
             paused: player.aplayer.paused,
+            volume: player.aplayer.volume,
             timestamp: Date.now()
         };
         localStorage.setItem('playerState', JSON.stringify(state));
+        console.log('音乐状态已保存:', state);
     }
 }
 
@@ -677,113 +691,66 @@ function restoreState() {
     const saved = localStorage.getItem('playerState');
     if (!saved) return;
     
-    const state = JSON.parse(saved);
-    if (Date.now() - state.timestamp > 3600000) return; 
-    
-    setTimeout(() => {
-        const player = document.querySelector('.aplayer');
-        if (player && player.aplayer) {
-            player.aplayer.list.switch(state.index);
-            setTimeout(() => {
-                player.aplayer.seek(state.currentTime);
-                if (!state.paused) player.aplayer.play();
-            }, 500);
-        }
-    }, 1000);
+    try {
+        const state = JSON.parse(saved);
+        if (Date.now() - state.timestamp > 3600000) return; 
+        
+        setTimeout(() => {
+            const player = document.querySelector('.aplayer');
+            if (player && player.aplayer) {
+                if (state.index !== undefined) {
+                    player.aplayer.list.switch(state.index);
+                }
+                setTimeout(() => {
+                    if (state.currentTime) {
+                        player.aplayer.seek(state.currentTime);
+                    }
+                    if (state.volume !== undefined) {
+                        player.aplayer.volume(state.volume);
+                    }
+                    if (!state.paused) {
+                        player.aplayer.play();
+                    }
+                    console.log('音乐状态已恢复:', state);
+                }, 500);
+            }
+        }, 1000);
+    } catch (e) {
+        console.error('恢复音乐状态失败:', e);
+    }
 }
 
 
-const pjax = new Pjax({
-    selectors: ['.main-container'],
-    cacheBust: false
-});
-
-
-window.addEventListener('load', restoreState);
-window.addEventListener('beforeunload', saveState);
-setInterval(saveState, 3000);
-
-
-document.addEventListener('pjax:send', () => {
+function initMusicPersistence() {
     
-    saveState();
-    console.log('PJAX: 保存音乐播放状态');
-});
-
-document.addEventListener('pjax:complete', () => {
-    
-    restoreState();
+    window.addEventListener('beforeunload', saveState);
     
     
-    if (window.Stack) window.Stack.init();
-    if (window.BlogStats && !window.BlogStats.isInitialized) {
-        window.BlogStats.init();
+    setInterval(saveState, 5000);
+    
+    
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', restoreState);
+    } else {
+        restoreState();
     }
     
-    console.log('PJAX: 页面跳转完成，重新初始化系统');
-});
-
-
-document.addEventListener('pjax:start', () => {
     
-    window.pageViewCounted = false;
-    console.log('PJAX: 重置访问计数标记');
-});
-</script>
-<script src="https://cdn.jsdelivr.net/npm/pjax/pjax.js"></script>
-<script>
-	var pjax = new Pjax({
-        selectors: [".main-container"],
-        cacheBust: false
-	})
-
-	pjax._handleResponse = pjax.handleResponse;
-
-	pjax.handleResponse = function(responseText, request, href, options) {
-		if (request.responseText.match("<html")) {
-            
-            let newDom = new DOMParser().parseFromString(responseText, 'text/html');
-            
-            let bodyClass = newDom.body.className;
-            document.body.setAttribute("class", bodyClass)
-            
-            pjax._handleResponse(responseText, request, href, options);
-        } else {
-            
+    const checkPlayer = setInterval(() => {
+        const player = document.querySelector('.aplayer');
+        if (player && player.aplayer) {
+            clearInterval(checkPlayer);
+            restoreState();
+            console.log('音乐播放器已加载，状态恢复完成');
         }
-	}
-
+    }, 500);
     
-    document.addEventListener('pjax:send', () => {
-        console.log('PJAX: 开始页面跳转');
-        
-        window.pageViewCounted = false;
-    });
+    console.log('音乐持久化初始化完成');
+}
 
-    document.addEventListener('pjax:complete', () => {
-        console.log('PJAX: 页面跳转完成');
-        
-        
-        if (window.Stack) {
-            window.Stack.init();
-        }
-        
-        
-        if (window.BlogStats) {
-            setTimeout(() => {
-                window.BlogStats.updateDisplay();
-            }, 100);
-        }
-        
-        
-        if (window.MathJax && MathJax.typesetPromise) {
-            MathJax.typesetPromise().then(() => {
-                console.log('PJAX: MathJax 重新渲染完成');
-            }).catch((err) => console.log('PJAX: MathJax 渲染错误:', err));
-        }
-    });
+
+initMusicPersistence();
 </script>
-
 
 <script>
 
