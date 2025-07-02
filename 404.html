@@ -56,46 +56,184 @@ document.addEventListener('DOMContentLoaded', function() {
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
+
 <script>
+
+(function() {
+    'use strict';
     
-    console.log('初始化访问统计');
     
-    
-    window.addEventListener('load', function() {
-        console.log('页面完全加载完成');
+    window.BlogStats = {
         
-        setTimeout(function() {
-            const event = new CustomEvent('updateStats');
-            window.dispatchEvent(event);
-        }, 200);
-    });
-    
-    
-    window.showAllStats = function() {
-        console.log('=== 所有访问统计数据 ===');
-        for (let i = 0; i < localStorage.length; i++) {
-            const key = localStorage.key(i);
-            if (key.startsWith('pageview_')) {
-                const value = localStorage.getItem(key);
-                console.log(key + ': ' + value);
-            }
+        keyPrefix: 'blog_pv_',
+        
+        
+        getCount: function(url) {
+            const key = this.keyPrefix + this.encodeUrl(url);
+            return parseInt(localStorage.getItem(key)) || 0;
+        },
+        
+        
+        increment: function(url) {
+            const key = this.keyPrefix + this.encodeUrl(url);
+            const count = this.getCount(url) + 1;
+            localStorage.setItem(key, count.toString());
+            console.log('访问计数增加:', url, '次数:', count);
+            return count;
+        },
+        
+        
+        encodeUrl: function(url) {
+            return btoa(encodeURIComponent(url)).replace(/[^a-zA-Z0-9]/g, '');
+        },
+        
+        
+        updateDisplay: function() {
+            const elements = document.querySelectorAll('.page-view-count');
+            const currentUrl = window.location.pathname;
+            const isArticlePage = document.body.classList.contains('article-page') || 
+                                 document.querySelector('.article-page') !== null;
+            
+            console.log('更新显示 - 找到元素:', elements.length, '当前URL:', currentUrl, '是文章页:', isArticlePage);
+            
+            let hasIncremented = false;
+            
+            elements.forEach(function(element) {
+                const articleUrl = element.getAttribute('data-url');
+                let count = window.BlogStats.getCount(articleUrl);
+                
+                
+                if (isArticlePage && 
+                    articleUrl === currentUrl && 
+                    !hasIncremented && 
+                    !sessionStorage.getItem('pv_incremented_' + articleUrl)) {
+                    
+                    count = window.BlogStats.increment(articleUrl);
+                    hasIncremented = true;
+                    
+                    sessionStorage.setItem('pv_incremented_' + articleUrl, 'true');
+                }
+                
+                
+                element.textContent = count;
+                console.log('显示更新:', articleUrl, '显示:', count);
+            });
+        },
+        
+        
+        forceRefresh: function() {
+            
+            const originalPushState = history.pushState;
+            const originalReplaceState = history.replaceState;
+            
+            history.pushState = function() {
+                const url = arguments[2];
+                if (url && url !== window.location.pathname) {
+                    console.log('拦截pushState，强制跳转:', url);
+                    window.location.href = url;
+                    return;
+                }
+                return originalPushState.apply(history, arguments);
+            };
+            
+            history.replaceState = function() {
+                const url = arguments[2];
+                if (url && url !== window.location.pathname) {
+                    console.log('拦截replaceState，强制跳转:', url);
+                    window.location.href = url;
+                    return;
+                }
+                return originalReplaceState.apply(history, arguments);
+            };
+            
+            
+            document.addEventListener('click', function(e) {
+                let target = e.target;
+                
+                
+                while (target && target.tagName !== 'A') {
+                    target = target.parentNode;
+                    if (target === document) break;
+                }
+                
+                if (target && target.tagName === 'A') {
+                    const href = target.getAttribute('href');
+                    
+                    
+                    if (href && 
+                        href.startsWith('/') && 
+                        !href.startsWith('#') && 
+                        href !== window.location.pathname) {
+                        
+                        console.log('拦截链接点击，强制跳转:', href);
+                        e.preventDefault();
+                        e.stopPropagation();
+                        
+                        
+                        window.location.href = href;
+                        return false;
+                    }
+                }
+            }, true);
+            
+            console.log('强制刷新机制已启用');
+        },
+        
+        
+        init: function() {
+            console.log('BlogStats 初始化');
+            this.updateDisplay();
+            this.forceRefresh();
         }
-        console.log('=== 统计数据结束 ===');
     };
     
     
-    window.clearAllStats = function() {
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', function() {
+            window.BlogStats.init();
+        });
+    } else {
+        window.BlogStats.init();
+    }
+    
+    
+    window.showStats = function() {
+        console.log('=== 博客访问统计 ===');
+        for (let i = 0; i < localStorage.length; i++) {
+            const key = localStorage.key(i);
+            if (key.startsWith(window.BlogStats.keyPrefix)) {
+                const value = localStorage.getItem(key);
+                console.log(key.replace(window.BlogStats.keyPrefix, '') + ': ' + value + ' 次');
+            }
+        }
+        console.log('=== 统计结束 ===');
+    };
+    
+    window.clearStats = function() {
         const keys = [];
         for (let i = 0; i < localStorage.length; i++) {
             const key = localStorage.key(i);
-            if (key.startsWith('pageview_')) {
+            if (key.startsWith(window.BlogStats.keyPrefix)) {
                 keys.push(key);
             }
         }
         keys.forEach(key => localStorage.removeItem(key));
+        
+        
+        const sessionKeys = [];
+        for (let i = 0; i < sessionStorage.length; i++) {
+            const key = sessionStorage.key(i);
+            if (key.startsWith('pv_incremented_')) {
+                sessionKeys.push(key);
+            }
+        }
+        sessionKeys.forEach(key => sessionStorage.removeItem(key));
+        
         console.log('已清除所有统计数据');
-        window.location.reload();
+        location.reload();
     };
+    
+})();
 </script>
     </head>
     <body class="">
@@ -424,107 +562,22 @@ document.addEventListener('pjax:complete', () => {
 </script>
 
 <script>
+
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('Footer: 确保统计系统正常运行');
     
-    function updateViewCount() {
-        const viewCountElements = document.querySelectorAll('.busuanzi_value_page_pv');
-        console.log('找到访问统计元素:', viewCountElements.length);
-        console.log('当前页面路径:', window.location.pathname);
-        
-        
-        const isArticlePage = document.querySelector('.article-page') !== null;
-        console.log('是否为文章页面:', isArticlePage);
-        
-        viewCountElements.forEach(function(element) {
-            const articleUrl = element.getAttribute('data-url');
-            const storageKey = 'pageview_' + btoa(unescape(encodeURIComponent(articleUrl))).replace(/[^a-zA-Z0-9]/g, '');
+    
+    function checkStatsSystem() {
+        if (window.BlogStats) {
+            console.log('Footer: 统计系统已加载');
             
-            
-            let count = parseInt(localStorage.getItem(storageKey)) || 0;
-            
-            
-            if (isArticlePage && articleUrl === window.location.pathname) {
-                count++;
-                localStorage.setItem(storageKey, count);
-                console.log('增加文章访问计数:', articleUrl, count);
-            }
-            
-            
-            element.textContent = count;
-            console.log('显示访问次数:', articleUrl, count);
-        });
-    }
-    
-    
-    function forcePageRefresh() {
-        
-        const links = document.querySelectorAll('a[href^="/"], a[href^="./"], a[href^="../"]');
-        links.forEach(function(link) {
-            
-            if (link.hasAttribute('data-force-refresh')) return;
-            link.setAttribute('data-force-refresh', 'true');
-            
-            link.addEventListener('click', function(e) {
-                
-                const href = this.getAttribute('href');
-                if (href && !href.startsWith('#') && !href.includes('mailto:') && !href.includes('tel:')) {
-                    console.log('强制刷新页面:', href);
-                    
-                    window.location.assign(href);
-                    e.preventDefault();
-                    return false;
-                }
-            });
-        });
-    }
-    
-    
-    updateViewCount();
-    
-    
-    document.addEventListener('DOMContentLoaded', function() {
-        console.log('页面加载完成');
-        setTimeout(function() {
-            updateViewCount();
-            forcePageRefresh();
-        }, 100);
-    });
-    
-    
-    window.addEventListener('popstate', function() {
-        console.log('popstate事件触发');
-        setTimeout(updateViewCount, 100);
-    });
-    
-    window.addEventListener('hashchange', function() {
-        console.log('hashchange事件触发');
-        setTimeout(updateViewCount, 100);
-    });
-    
-    
-    window.addEventListener('pageshow', function(e) {
-        console.log('pageshow事件触发');
-        if (e.persisted) {
-            
-            setTimeout(updateViewCount, 100);
+        } else {
+            setTimeout(checkStatsSystem, 50);
         }
-    });
+    }
     
-    
-    window.addEventListener('focus', function() {
-        console.log('focus事件触发');
-        setTimeout(updateViewCount, 100);
-    });
-    
-    
-    window.addEventListener('updateStats', function() {
-        console.log('收到统计更新事件');
-        updateViewCount();
-    });
-    
-    
-    setInterval(function() {
-        updateViewCount();
-    }, 5000); 
+    checkStatsSystem();
+});
 </script>
 
     </body>
