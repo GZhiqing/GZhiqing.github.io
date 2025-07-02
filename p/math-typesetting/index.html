@@ -6,7 +6,7 @@
 
 <link rel='canonical' href='https://GZhiqing.github.io/p/math-typesetting/'>
 
-<link rel="stylesheet" href="/scss/style.min.1ad883ce076dca4bc5437042b6dd8a4833be1b3def0b5e6558ea855400dfe5ad.css"><meta property='og:title' content="Math Typesetting">
+<link rel="stylesheet" href="/scss/style.min.d0b3f39828bca2e9e4793da7bfdd7075837652dc2f65ac75d29ef7ee72647d96.css"><meta property='og:title' content="Math Typesetting">
 <meta property='og:description' content="A brief guide to setup KaTeX">
 <meta property='og:url' content='https://GZhiqing.github.io/p/math-typesetting/'>
 <meta property='og:site_name' content='GZhiqing_BLOG'>
@@ -135,8 +135,21 @@ document.addEventListener('DOMContentLoaded', function() {
         
         
         handleNavigation: function() {
-            console.log('导航处理已启用（正常刷新模式）');
+            console.log('导航处理已启用（PJAX模式）');
             
+            
+            if (!window.pjaxStatsHandled) {
+                document.addEventListener('pjax:complete', () => {
+                    console.log('PJAX完成后更新统计');
+                    
+                    window.pageViewCounted = false;
+                    
+                    setTimeout(() => {
+                        window.BlogStats.updateDisplay();
+                    }, 100);
+                });
+                window.pjaxStatsHandled = true;
+            }
         },
         
         
@@ -236,6 +249,8 @@ document.addEventListener('DOMContentLoaded', function() {
     
 })();
 </script>
+
+
     </head>
     <body class="
     article-page
@@ -804,7 +819,7 @@ $$
 <script src="https://cdn.jsdelivr.net/npm/meting@2/dist/Meting.min.js"></script>
 
 
-<div id="music-player-container" style="position: fixed; bottom: 0; left: 0; right: 0; z-index: 9999;">
+<div id="music-player-container" style="position: fixed; bottom: 0; left: 0; right: 0; z-index: 9999;" data-no-pjax>
     <meting-js 
         server="netease" 
         type="playlist"
@@ -835,6 +850,9 @@ function saveState() {
         console.log('音乐状态已保存:', state);
     }
 }
+
+
+window.saveState = saveState;
 
 function restoreState() {
     const saved = localStorage.getItem('playerState');
@@ -900,7 +918,71 @@ function initMusicPersistence() {
 
 initMusicPersistence();
 </script>
+<script src="https://cdn.jsdelivr.net/npm/pjax/pjax.js"></script>
+<script>
+    
+    var pjax = new Pjax({
+        selectors: [
+            "title",
+            ".main-container",
+            "meta[name=description]"
+        ],
+        cacheBust: false,
+        
+        elements: "a:not([data-no-pjax]):not([href^='#']):not([href*='javascript:']):not([href^='mailto:']):not([target='_blank'])"
+    });
 
+    
+    pjax._handleResponse = pjax.handleResponse;
+    pjax.handleResponse = function(responseText, request, href, options) {
+        if (request.responseText.match("<html")) {
+            
+            let newDom = new DOMParser().parseFromString(responseText, 'text/html');
+            
+            let bodyClass = newDom.body.className;
+            document.body.setAttribute("class", bodyClass);
+            
+            pjax._handleResponse(responseText, request, href, options);
+        } else {
+            
+            console.error("PJAX: 收到非HTML响应");
+        }
+    }
+
+    
+    document.addEventListener('pjax:send', () => {
+        console.log('PJAX: 开始页面跳转');
+        
+        window.pageViewCounted = false;
+        
+        if (window.saveState) {
+            window.saveState();
+        }
+    });
+
+    document.addEventListener('pjax:complete', () => {
+        console.log('PJAX: 页面跳转完成');
+        
+        
+        if (window.Stack) {
+            window.Stack.init();
+        }
+        
+        
+        if (window.BlogStats) {
+            setTimeout(() => {
+                window.BlogStats.updateDisplay();
+            }, 100);
+        }
+        
+        
+        if (window.MathJax && MathJax.typesetPromise) {
+            MathJax.typesetPromise().then(() => {
+                console.log('PJAX: MathJax 重新渲染完成');
+            }).catch((err) => console.log('PJAX: MathJax 渲染错误:', err));
+        }
+    });
+</script>
 <script>
 
 document.addEventListener('DOMContentLoaded', function() {

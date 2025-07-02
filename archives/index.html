@@ -6,7 +6,7 @@
 
 <link rel='canonical' href='https://GZhiqing.github.io/archives/'>
 
-<link rel="stylesheet" href="/scss/style.min.1ad883ce076dca4bc5437042b6dd8a4833be1b3def0b5e6558ea855400dfe5ad.css"><meta property='og:title' content="归档">
+<link rel="stylesheet" href="/scss/style.min.d0b3f39828bca2e9e4793da7bfdd7075837652dc2f65ac75d29ef7ee72647d96.css"><meta property='og:title' content="归档">
 <meta property='og:description' content="">
 <meta property='og:url' content='https://GZhiqing.github.io/archives/'>
 <meta property='og:site_name' content='GZhiqing_BLOG'>
@@ -135,8 +135,21 @@ document.addEventListener('DOMContentLoaded', function() {
         
         
         handleNavigation: function() {
-            console.log('导航处理已启用（正常刷新模式）');
+            console.log('导航处理已启用（PJAX模式）');
             
+            
+            if (!window.pjaxStatsHandled) {
+                document.addEventListener('pjax:complete', () => {
+                    console.log('PJAX完成后更新统计');
+                    
+                    window.pageViewCounted = false;
+                    
+                    setTimeout(() => {
+                        window.BlogStats.updateDisplay();
+                    }, 100);
+                });
+                window.pjaxStatsHandled = true;
+            }
         },
         
         
@@ -236,8 +249,12 @@ document.addEventListener('DOMContentLoaded', function() {
     
 })();
 </script>
+
+
     </head>
-    <body class="resume-page article-page">
+    <body class="
+    article-page
+    ">
     <script>
         (function() {
             const colorSchemeKey = 'StackColorScheme';
@@ -463,35 +480,12 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
             <main class="main full-width">
-    <div class="resume-container">
-        
-        <div class="resume-header">
-            <div class="resume-photo">
-                
-                
-                    <img src="/img/TX.png" alt="个人照片" class="profile-photo">
-                
-            </div>
-            
-            <div class="resume-basic-info">
-                <h1 class="resume-name">归档</h1>
-                <div class="resume-actions">
-                    <button onclick="window.print()" class="btn-download">
-                        <i class="fas fa-print"></i> 打印简历
-                    </button>
-                    <a href="#" onclick="generatePDF()" class="btn-download">
-                        <i class="fas fa-download"></i> 下载PDF
-                    </a>
-                    <button onclick="toggleEditMode()" class="btn-edit">
-                        <i class="fas fa-edit"></i> 编辑模式
-                    </button>
-                </div>
-            </div>
-        </div>
+    
+    
+        <article class="main-article">
+    <header class="article-header">
 
-        
-        <div class="resume-meta">
-            <div class="article-details">
+    <div class="article-details">
     
 
     <div class="article-title-wrapper">
@@ -541,85 +535,93 @@ document.addEventListener('DOMContentLoaded', function() {
     
 </div>
 
-        </div>
+</header>
 
-        
-        <article class="resume-content">
-            
-        </article>
 
-        
-        <div id="pdf-content" style="display: none;">
-            <div class="pdf-header">
-                <div class="pdf-photo">
-                    
-                        <img src="/img/TX.png" alt="个人照片">
-                    
-                </div>
-                <div class="pdf-basic-info">
-                    <h1>归档</h1>
-                    <p>生成时间: 2025年07月02日</p>
-                </div>
-            </div>
-            <div class="pdf-body">
-                
-            </div>
-        </div>
-    </div>
+    <section class="article-content">
+    
+    
+    
+</section>
+
+
+    <footer class="article-footer">
+    
+
+    </footer>
+
 
     
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-    <script>
-        function generatePDF() {
-            const element = document.getElementById('pdf-content');
-            const opt = {
-                margin: [0.5, 0.5, 0.5, 0.5],
-                filename: '归档_简历_20250702.pdf',
-                image: { type: 'jpeg', quality: 0.98 },
-                html2canvas: { 
-                    scale: 2,
-                    useCORS: true,
-                    allowTaint: true 
-                },
-                jsPDF: { 
-                    unit: 'in', 
-                    format: 'a4', 
-                    orientation: 'portrait' 
-                }
-            };
-            
-            
-            element.style.display = 'block';
-            
-            html2pdf().set(opt).from(element).save().then(() => {
-                
-                element.style.display = 'none';
-            });
-        }
-
-        function toggleEditMode() {
-            const content = document.querySelector('.resume-content');
-            if (content.contentEditable === 'true') {
-                content.contentEditable = 'false';
-                content.classList.remove('edit-mode');
-                alert('编辑模式已关闭');
-            } else {
-                content.contentEditable = 'true';
-                content.classList.add('edit-mode');
-                alert('编辑模式已开启，您可以直接编辑内容');
-            }
-        }
+        <link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css"integrity="sha384-n8MVd4RsNIU0tAv4ct0nTaAbDJwPJzDEaqSD1odI&#43;WdtXRGWt2kTvGFasHpSy3SV"crossorigin="anonymous"
+            ><script 
+                src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"integrity="sha384-XjKyOOlGwcjNTAIQHIpgOno0Hl1YQqzUOEleOLALmuqehneUG&#43;vnGctmUb0ZY0l8"crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"integrity="sha384-&#43;VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4&#43;/RRE05"crossorigin="anonymous"
+                defer
+                >
+            </script><script>
+    window.addEventListener("DOMContentLoaded", () => {
+        renderMathInElement(document.body, {
+            delimiters: [
+                { left: "$$", right: "$$", display: true },
+                { left: "$", right: "$", display: false },
+                { left: "\\(", right: "\\)", display: false },
+                { left: "\\[", right: "\\]", display: true }
+            ],
+            ignoredClasses: ["gist"]
+        });})
+</script>
+    
+</article>
 
         
-        window.addEventListener('beforeprint', function() {
-            document.body.classList.add('printing');
-        });
+    
+            }
 
-        window.addEventListener('afterprint', function() {
-            document.body.classList.remove('printing');
-        });
-    </script>
+            // 注册中文字体 (使用系统内置字体的替代方案)
+            function registerFonts() {
+                // 添加PDF中文字体支持
+                pdfMake.fonts = {
+                    SimSun: {
+                        normal: 'SimSun',
+                        bold: 'SimHei',
+                        italics: 'KaiTi',
+                        bolditalics: 'SimHei'
+                    },
+                    SimHei: {
+                        normal: 'SimHei',
+                        bold: 'SimHei',
+                        italics: 'SimHei',
+                        bolditalics: 'SimHei'
+                    },
+                    // 默认回退字体
+                    Roboto: {
+                        normal: 'Helvetica',
+                        bold: 'Helvetica-Bold',
+                        italics: 'Helvetica-Oblique',
+                        bolditalics: 'Helvetica-BoldOblique'
+                    }
+                };
+            }
+            
+            // 初始化PDF设置
+            registerFonts();
 
+            // 打印样式优化
+            window.addEventListener('beforeprint', function() {
+                document.body.classList.add('printing');
+            });
+
+            window.addEventListener('afterprint', function() {
+                document.body.classList.remove('printing');
+            });
+        </script>
+    </div>
+    
     <footer class="site-footer">
     <section class="copyright">
         &copy; 
@@ -660,7 +662,7 @@ document.addEventListener('DOMContentLoaded', function() {
 <script src="https://cdn.jsdelivr.net/npm/meting@2/dist/Meting.min.js"></script>
 
 
-<div id="music-player-container" style="position: fixed; bottom: 0; left: 0; right: 0; z-index: 9999;">
+<div id="music-player-container" style="position: fixed; bottom: 0; left: 0; right: 0; z-index: 9999;" data-no-pjax>
     <meting-js 
         server="netease" 
         type="playlist"
@@ -691,6 +693,9 @@ function saveState() {
         console.log('音乐状态已保存:', state);
     }
 }
+
+
+window.saveState = saveState;
 
 function restoreState() {
     const saved = localStorage.getItem('playerState');
@@ -756,7 +761,71 @@ function initMusicPersistence() {
 
 initMusicPersistence();
 </script>
+<script src="https://cdn.jsdelivr.net/npm/pjax/pjax.js"></script>
+<script>
+    
+    var pjax = new Pjax({
+        selectors: [
+            "title",
+            ".main-container",
+            "meta[name=description]"
+        ],
+        cacheBust: false,
+        
+        elements: "a:not([data-no-pjax]):not([href^='#']):not([href*='javascript:']):not([href^='mailto:']):not([target='_blank'])"
+    });
 
+    
+    pjax._handleResponse = pjax.handleResponse;
+    pjax.handleResponse = function(responseText, request, href, options) {
+        if (request.responseText.match("<html")) {
+            
+            let newDom = new DOMParser().parseFromString(responseText, 'text/html');
+            
+            let bodyClass = newDom.body.className;
+            document.body.setAttribute("class", bodyClass);
+            
+            pjax._handleResponse(responseText, request, href, options);
+        } else {
+            
+            console.error("PJAX: 收到非HTML响应");
+        }
+    }
+
+    
+    document.addEventListener('pjax:send', () => {
+        console.log('PJAX: 开始页面跳转');
+        
+        window.pageViewCounted = false;
+        
+        if (window.saveState) {
+            window.saveState();
+        }
+    });
+
+    document.addEventListener('pjax:complete', () => {
+        console.log('PJAX: 页面跳转完成');
+        
+        
+        if (window.Stack) {
+            window.Stack.init();
+        }
+        
+        
+        if (window.BlogStats) {
+            setTimeout(() => {
+                window.BlogStats.updateDisplay();
+            }, 100);
+        }
+        
+        
+        if (window.MathJax && MathJax.typesetPromise) {
+            MathJax.typesetPromise().then(() => {
+                console.log('PJAX: MathJax 重新渲染完成');
+            }).catch((err) => console.log('PJAX: MathJax 渲染错误:', err));
+        }
+    });
+</script>
 <script>
 
 document.addEventListener('DOMContentLoaded', function() {
