@@ -750,17 +750,25 @@
         }
         
         
-        function hasViewedRecently(url) {
-            const lastViewTime = localStorage.getItem(`last_view_${url}`);
-            if (!lastViewTime) return false;
+        function hasViewedInCurrentSession(url) {
+            const sessionKey = `current_session_${url}`;
+            const currentSessionId = sessionStorage.getItem('current_session_id');
+            const lastSessionForUrl = sessionStorage.getItem(sessionKey);
             
             
-            const timeDiff = Date.now() - parseInt(lastViewTime);
-            return timeDiff < 30000; 
+            return currentSessionId && lastSessionForUrl === currentSessionId;
         }
         
-        function markViewedNow(url) {
-            localStorage.setItem(`last_view_${url}`, Date.now().toString());
+        function markViewedInCurrentSession(url) {
+            
+            let currentSessionId = sessionStorage.getItem('current_session_id');
+            if (!currentSessionId) {
+                currentSessionId = Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+                sessionStorage.setItem('current_session_id', currentSessionId);
+            }
+            
+            const sessionKey = `current_session_${url}`;
+            sessionStorage.setItem(sessionKey, currentSessionId);
         }
         
         
@@ -769,13 +777,13 @@
             const articleUrl = currentUrl;
             
             
-            if (!hasViewedRecently(articleUrl)) {
+            if (!hasViewedInCurrentSession(articleUrl)) {
                 
                 const newCount = window.incrementViewCount(articleUrl);
-                markViewedNow(articleUrl);
+                markViewedInCurrentSession(articleUrl);
                 console.log('文章页面访问计数:', articleUrl, '当前阅读量:', newCount);
             } else {
-                console.log('30秒内已计数过，跳过:', articleUrl);
+                console.log('当前页面会话已计数过，跳过:', articleUrl);
             }
         }
         
@@ -1035,7 +1043,7 @@
             const keys = [];
             for (let i = 0; i < sessionStorage.length; i++) {
                 const key = sessionStorage.key(i);
-                if (key && key.startsWith('viewed_')) {
+                if (key && (key.startsWith('viewed_') || key.startsWith('current_session_') || key === 'current_session_id')) {
                     keys.push(key);
                 }
             }
@@ -1053,11 +1061,17 @@
         
         
         getCurrentPageInfo: function() {
+            const url = window.location.pathname;
+            const currentSessionId = sessionStorage.getItem('current_session_id');
+            const sessionKey = `current_session_${url}`;
+            const lastSessionForUrl = sessionStorage.getItem(sessionKey);
+            
             const info = {
-                url: window.location.pathname,
+                url: url,
                 isArticlePage: document.querySelector('.article-page') !== null,
-                hasViewedInSession: sessionStorage.getItem(`viewed_${window.location.pathname}`) === 'true',
-                currentCount: window.getViewCount(window.location.pathname),
+                currentSessionId: currentSessionId,
+                hasViewedInCurrentSession: currentSessionId && lastSessionForUrl === currentSessionId,
+                currentCount: window.getViewCount(url),
                 deviceId: window._internal.getDeviceFingerprint()
             };
             console.log('当前页面信息:', info);
