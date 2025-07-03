@@ -471,12 +471,151 @@
 
 <script src="https://cdn.jsdelivr.net/npm/meting@2/dist/Meting.min.js"></script>
 
-<meting-js
-	server="netease"
-	type="playlist"
-    fixed="true"
-	id="2777427516">
-</meting-js>
+
+
+
+<div id="music-player-container">
+    <meting-js
+        id="global-music-player"
+        server="netease"
+        type="playlist"
+        fixed="true"
+        id="2777427516"
+        autoplay="false"
+        theme="#ad7a86"
+        loop="all"
+        order="random"
+        preload="auto"
+        volume="0.7"
+        lrcshow="false">
+    </meting-js>
+</div>
+
+<script>
+
+(function() {
+    let globalMusicPlayer = null;
+    let musicPlayerInitialized = false;
+    
+    function initMusicPlayer() {
+        if (musicPlayerInitialized) return;
+        
+        
+        if (typeof MetingJSElement !== 'undefined') {
+            const musicElement = document.querySelector('#global-music-player');
+            if (musicElement && !musicElement.aplayer) {
+                
+                musicPlayerInitialized = true;
+                
+                
+                const checkPlayer = setInterval(() => {
+                    if (musicElement.aplayer) {
+                        globalMusicPlayer = musicElement.aplayer;
+                        clearInterval(checkPlayer);
+                        
+                        
+                        restorePlayerState();
+                        
+                        
+                        globalMusicPlayer.on('play', savePlayerState);
+                        globalMusicPlayer.on('pause', savePlayerState);
+                        globalMusicPlayer.on('canplay', savePlayerState);
+                        globalMusicPlayer.on('timeupdate', savePlayerState);
+                    }
+                }, 100);
+                
+                
+                setTimeout(() => clearInterval(checkPlayer), 5000);
+            }
+        }
+    }
+    
+    function savePlayerState() {
+        if (!globalMusicPlayer) return;
+        
+        const state = {
+            currentTime: globalMusicPlayer.audio.currentTime,
+            paused: globalMusicPlayer.audio.paused,
+            volume: globalMusicPlayer.audio.volume,
+            currentIndex: globalMusicPlayer.list.index
+        };
+        
+        try {
+            localStorage.setItem('music-player-state', JSON.stringify(state));
+        } catch (e) {
+            console.warn('无法保存音乐播放器状态:', e);
+        }
+    }
+    
+    function restorePlayerState() {
+        if (!globalMusicPlayer) return;
+        
+        try {
+            const savedState = localStorage.getItem('music-player-state');
+            if (savedState) {
+                const state = JSON.parse(savedState);
+                
+                
+                if (state.volume !== undefined) {
+                    globalMusicPlayer.volume(state.volume);
+                }
+                
+                
+                if (state.currentIndex !== undefined && state.currentIndex !== globalMusicPlayer.list.index) {
+                    globalMusicPlayer.list.switch(state.currentIndex);
+                }
+                
+                
+                if (state.currentTime && state.currentTime > 0) {
+                    globalMusicPlayer.seek(state.currentTime);
+                }
+                
+                
+                if (!state.paused) {
+                    setTimeout(() => {
+                        globalMusicPlayer.play();
+                    }, 500);
+                }
+            }
+        } catch (e) {
+            console.warn('无法恢复音乐播放器状态:', e);
+        }
+    }
+    
+    
+    function handlePageLoad() {
+        setTimeout(initMusicPlayer, 500);
+    }
+    
+    
+    if (typeof window.Stack !== 'undefined') {
+        
+        document.addEventListener('pjax:complete', handlePageLoad);
+        document.addEventListener('pjax:success', handlePageLoad);
+    }
+    
+    
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', handlePageLoad);
+    } else {
+        handlePageLoad();
+    }
+    
+    
+    window.addEventListener('beforeunload', savePlayerState);
+    
+    
+    window.MusicPlayerManager = {
+        getPlayer: () => globalMusicPlayer,
+        saveState: savePlayerState,
+        restoreState: restorePlayerState,
+        reinit: () => {
+            musicPlayerInitialized = false;
+            initMusicPlayer();
+        }
+    };
+})();
+</script>
 
   <script>
     function showHideView() {
