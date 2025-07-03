@@ -6,7 +6,7 @@
 
 <link rel='canonical' href='https://GZhiqing.github.io/tags/css/'>
 
-<link rel="stylesheet" href="/scss/style.min.294fa05686aa8844d860d30b209cb90708470927fa82b58de9286bd0d1c344de.css"><meta property='og:title' content="Tag: Css - GZhiqing_BLOG">
+<link rel="stylesheet" href="/scss/style.min.067eca5fa113330584d886a3e6a99e5c5e7cb44b1c676f06879e372c1b60856e.css"><meta property='og:title' content="Tag: Css - GZhiqing_BLOG">
 <meta property='og:description' content="GZhiqing_BLOG">
 <meta property='og:url' content='https://GZhiqing.github.io/tags/css/'>
 <meta property='og:site_name' content='GZhiqing_BLOG'>
@@ -572,28 +572,7 @@
 
     
     function updateViewCount() {
-        const storageKey = 'page_view_counts';
         const currentUrl = window.location.pathname;
-        
-        
-        function getStoredCounts() {
-            try {
-                const stored = localStorage.getItem(storageKey);
-                return stored ? JSON.parse(stored) : {};
-            } catch (error) {
-                console.warn('Failed to get view counts from localStorage:', error);
-                return {};
-            }
-        }
-        
-        
-        function setStoredCounts(counts) {
-            try {
-                localStorage.setItem(storageKey, JSON.stringify(counts));
-            } catch (error) {
-                console.warn('Failed to save view counts to localStorage:', error);
-            }
-        }
         
         
         function isArticlePage() {
@@ -601,25 +580,11 @@
         }
         
         
-        function incrementViewCount(url) {
-            const counts = getStoredCounts();
-            counts[url] = (counts[url] || 0) + 1;
-            setStoredCounts(counts);
-            return counts[url];
-        }
-        
-        
-        function getViewCount(url) {
-            const counts = getStoredCounts();
-            return counts[url] || 0;
-        }
-        
-        
         const viewCountElements = document.querySelectorAll('.page-view-count');
         viewCountElements.forEach(element => {
             const url = element.getAttribute('data-url');
             if (url) {
-                let count = getViewCount(url);
+                let count = window.getViewCount(url);
                 
                 
                 const isCurrentPage = url === currentUrl || 
@@ -628,11 +593,8 @@
                 
                 if (isCurrentPage && isArticlePage()) {
                     
-                    const sessionKey = 'session_viewed_' + url;
-                    if (!sessionStorage.getItem(sessionKey)) {
-                        count = incrementViewCount(url);
-                        sessionStorage.setItem(sessionKey, 'true');
-                    }
+                    count = window.incrementViewCount(url);
+                    console.log('页面访问计数:', url, '当前阅读量:', count);
                 }
                 
                 element.textContent = count.toString();
@@ -640,23 +602,150 @@
         });
         
         
-        if (!isArticlePage()) {
-            const viewCounts = document.querySelectorAll("#viewCount");
-            viewCounts.forEach(ele => {
-                ele.style.display = 'none';
-            });
-        }
+        const viewCounts = document.querySelectorAll("#viewCount, .viewCount");
+        viewCounts.forEach(ele => {
+            if (isArticlePage()) {
+                
+                ele.style.display = 'inline-flex';
+            } else {
+                
+                const isMobile = window.innerWidth <= 768;
+                ele.style.display = isMobile ? 'inline-flex' : 'none';
+            }
+        });
     }
     
     
+    
     document.addEventListener('DOMContentLoaded', function() {
+        
+        initSimpleCrossDeviceViewCount();
+        
         updateViewCount();
     });
     
     
     if (document.readyState === 'complete' || document.readyState === 'interactive') {
+        
+        initSimpleCrossDeviceViewCount();
+        
         updateViewCount();
+    }    
+    
+    function initSimpleCrossDeviceViewCount() {
+        
+        const GIST_ID = 'your-gist-id-here'; 
+        const GITHUB_TOKEN = 'your-github-token-here'; 
+        
+        
+        const useLocalStorage = !GIST_ID || GIST_ID === 'your-gist-id-here';
+        
+        
+        function getDeviceFingerprint() {
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            ctx.textBaseline = 'top';
+            ctx.font = '14px Arial';
+            ctx.fillText('Device fingerprint', 2, 2);
+            
+            const fingerprint = [
+                navigator.userAgent,
+                navigator.language,
+                screen.width + 'x' + screen.height,
+                new Date().getTimezoneOffset(),
+                canvas.toDataURL()
+            ].join('|');
+            
+            
+            let hash = 0;
+            for (let i = 0; i < fingerprint.length; i++) {
+                const char = fingerprint.charCodeAt(i);
+                hash = ((hash << 5) - hash) + char;
+                hash = hash & hash;
+            }
+            
+            return Math.abs(hash).toString(36);
+        }
+        
+        
+        function getDeviceStorageKey() {
+            const deviceId = getDeviceFingerprint();
+            return `page_view_counts_${deviceId}`;
+        }
+        
+        
+        function getAllDevicesCounts() {
+            const allCounts = {};
+            
+            
+            for (let i = 0; i < localStorage.length; i++) {
+                const key = localStorage.key(i);
+                if (key && key.startsWith('page_view_counts_')) {
+                    try {
+                        const counts = JSON.parse(localStorage.getItem(key));
+                        Object.keys(counts).forEach(url => {
+                            allCounts[url] = (allCounts[url] || 0) + (counts[url] || 0);
+                        });
+                    } catch (error) {
+                        console.warn('Failed to parse counts from key:', key);
+                    }
+                }
+            }
+            
+            return allCounts;
+        }
+        
+        
+        function getCurrentDeviceCounts() {
+            try {
+                const stored = localStorage.getItem(getDeviceStorageKey());
+                return stored ? JSON.parse(stored) : {};
+            } catch (error) {
+                console.warn('Failed to get current device counts:', error);
+                return {};
+            }
+        }
+        
+        
+        function setCurrentDeviceCounts(counts) {
+            try {
+                localStorage.setItem(getDeviceStorageKey(), JSON.stringify(counts));
+            } catch (error) {
+                console.warn('Failed to save current device counts:', error);
+            }
+        }
+        
+        
+        function incrementCurrentDeviceCount(url) {
+            const counts = getCurrentDeviceCounts();
+            counts[url] = (counts[url] || 0) + 1;
+            setCurrentDeviceCounts(counts);
+            return counts[url];
+        }
+        
+        
+        function getTotalViewCount(url) {
+            if (useLocalStorage) {
+                const allCounts = getAllDevicesCounts();
+                return allCounts[url] || 0;
+            } else {
+                
+                const localCounts = getCurrentDeviceCounts();
+                return localCounts[url] || 0;
+            }
+        }
+        
+        
+        window.getStoredCounts = getAllDevicesCounts;
+        window.setStoredCounts = setCurrentDeviceCounts;
+        window.incrementViewCount = function(url) {
+            incrementCurrentDeviceCount(url);
+            return getTotalViewCount(url);
+        };
+        window.getViewCount = getTotalViewCount;
     }
+
+    
 </script>
 
     </body>
