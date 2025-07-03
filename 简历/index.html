@@ -700,6 +700,60 @@
 </script>
         
 
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.css">
+<script src="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/meting@2/dist/Meting.min.js"></script>
+
+<meting-js
+    server="netease"
+    type="playlist"
+    fixed="true"
+    id="2777427516"
+    autoplay="false"
+    theme="#ad7a86"
+    loop="all"
+    order="random"
+    preload="auto"
+    volume="0.7"
+    lrcshow="false">
+</meting-js>
+
+<script>
+
+(function() {
+    let globalMusicPlayer = null;
+    
+    function initMusicPlayer() {
+        console.log('初始化音乐播放器...');
+        
+        
+        const checkMeting = setInterval(() => {
+            const musicElement = document.querySelector('meting-js');
+            if (musicElement && musicElement.aplayer) {
+                clearInterval(checkMeting);
+                globalMusicPlayer = musicElement.aplayer;
+                console.log('音乐播放器初始化完成');
+            }
+        }, 500);
+        
+        
+        setTimeout(() => clearInterval(checkMeting), 10000);
+    }
+    
+    
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initMusicPlayer);
+    } else {
+        setTimeout(initMusicPlayer, 1000);
+    }
+    
+    
+    window.MusicPlayerManager = {
+        getPlayer: () => globalMusicPlayer,
+        reinit: initMusicPlayer
+    };
+})();
+</script>
 
   <script>
     function showHideView() {
@@ -725,222 +779,59 @@
         
         
         
-<div id="music-player-container" class="music-player-fixed">
-    
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.js"></script>
-    
-    <script src="https://cdn.jsdelivr.net/npm/meting@2/dist/Meting.min.js"></script>
-    
-    <meting-js
-        id="global-music-player"
-        server="netease"
-        type="playlist"
-        fixed="true"
-        id="2777427516"
-        autoplay="false"
-        theme="#ad7a86"
-        loop="all"
-        order="random"
-        preload="auto"
-        volume="0.7"
-        lrcshow="false">
-    </meting-js>
-</div>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.css">
+<script src="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/meting@2/dist/Meting.min.js"></script>
 
-
+<meting-js
+    server="netease"
+    type="playlist"
+    fixed="true"
+    id="2777427516"
+    autoplay="false"
+    theme="#ad7a86"
+    loop="all"
+    order="random"
+    preload="auto"
+    volume="0.7"
+    lrcshow="false">
+</meting-js>
 
 <script>
 
 (function() {
     let globalMusicPlayer = null;
-    let musicPlayerInitialized = false;
-    let playerStateCache = null;
     
     function initMusicPlayer() {
-        if (musicPlayerInitialized) return;
-        
         console.log('初始化音乐播放器...');
         
         
-        const checkMetingJS = setInterval(() => {
-            if (typeof window.MetingJSElement !== 'undefined' || document.querySelector('meting-js[aplayer]')) {
-                clearInterval(checkMetingJS);
-                
-                const musicElement = document.querySelector('#global-music-player');
-                if (musicElement) {
-                    
-                    const checkPlayer = setInterval(() => {
-                        if (musicElement.aplayer || (window.aplayers && window.aplayers.length > 0)) {
-                            clearInterval(checkPlayer);
-                            
-                            globalMusicPlayer = musicElement.aplayer || (window.aplayers && window.aplayers[0]);
-                            musicPlayerInitialized = true;
-                            
-                            console.log('音乐播放器初始化完成');
-                            
-                            
-                            restorePlayerState();
-                            
-                            
-                            if (globalMusicPlayer) {
-                                globalMusicPlayer.on('play', savePlayerState);
-                                globalMusicPlayer.on('pause', savePlayerState);
-                                globalMusicPlayer.on('timeupdate', savePlayerState);
-                                globalMusicPlayer.on('loadeddata', savePlayerState);
-                            }
-                        }
-                    }, 200);
-                    
-                    
-                    setTimeout(() => clearInterval(checkPlayer), 10000);
-                }
+        const checkMeting = setInterval(() => {
+            const musicElement = document.querySelector('meting-js');
+            if (musicElement && musicElement.aplayer) {
+                clearInterval(checkMeting);
+                globalMusicPlayer = musicElement.aplayer;
+                console.log('音乐播放器初始化完成');
             }
-        }, 100);
+        }, 500);
         
         
-        setTimeout(() => clearInterval(checkMetingJS), 5000);
-    }
-    
-    function savePlayerState() {
-        if (!globalMusicPlayer || !globalMusicPlayer.audio) return;
-        
-        try {
-            const state = {
-                currentTime: globalMusicPlayer.audio.currentTime || 0,
-                paused: globalMusicPlayer.audio.paused,
-                volume: globalMusicPlayer.audio.volume || 0.7,
-                currentIndex: globalMusicPlayer.list ? globalMusicPlayer.list.index : 0,
-                timestamp: Date.now()
-            };
-            
-            playerStateCache = state;
-            localStorage.setItem('music-player-state', JSON.stringify(state));
-            
-        } catch (e) {
-            console.warn('无法保存音乐播放器状态:', e);
-        }
-    }
-    
-    function restorePlayerState() {
-        if (!globalMusicPlayer || !globalMusicPlayer.audio) return;
-        
-        try {
-            const savedState = localStorage.getItem('music-player-state');
-            if (savedState) {
-                const state = JSON.parse(savedState);
-                
-                
-                if (Date.now() - state.timestamp > 3600000) {
-                    localStorage.removeItem('music-player-state');
-                    return;
-                }
-                
-                setTimeout(() => {
-                    try {
-                        
-                        if (state.volume !== undefined && globalMusicPlayer.volume) {
-                            globalMusicPlayer.volume(state.volume);
-                        }
-                        
-                        
-                        if (state.currentIndex !== undefined && globalMusicPlayer.list && globalMusicPlayer.list.switch) {
-                            globalMusicPlayer.list.switch(state.currentIndex);
-                        }
-                        
-                        
-                        if (state.currentTime && state.currentTime > 0 && globalMusicPlayer.seek) {
-                            globalMusicPlayer.seek(state.currentTime);
-                        }
-                        
-                        
-                        if (!state.paused && globalMusicPlayer.play) {
-                            setTimeout(() => {
-                                globalMusicPlayer.play();
-                            }, 1000);
-                        }
-                        
-                        console.log('音乐播放器状态已恢复');
-                    } catch (e) {
-                        console.warn('恢复播放器状态时出错:', e);
-                    }
-                }, 1500);
-            }
-        } catch (e) {
-            console.warn('无法恢复音乐播放器状态:', e);
-        }
-    }
-    
-    
-    function handlePageLoad() {
-        console.log('页面加载，检查音乐播放器...');
-        setTimeout(initMusicPlayer, 800);
+        setTimeout(() => clearInterval(checkMeting), 10000);
     }
     
     
     if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', handlePageLoad);
+        document.addEventListener('DOMContentLoaded', initMusicPlayer);
     } else {
-        handlePageLoad();
+        setTimeout(initMusicPlayer, 1000);
     }
-    
-    
-    document.addEventListener('pjax:complete', function() {
-        console.log('PJAX完成，音乐播放器应保持播放状态');
-        
-    });
-    
-    document.addEventListener('pjax:send', function() {
-        console.log('PJAX开始，保存音乐播放器状态');
-        savePlayerState();
-    });
-    
-    
-    window.addEventListener('beforeunload', function() {
-        savePlayerState();
-    });
     
     
     window.MusicPlayerManager = {
         getPlayer: () => globalMusicPlayer,
-        saveState: savePlayerState,
-        restoreState: restorePlayerState,
-        reinit: () => {
-            musicPlayerInitialized = false;
-            initMusicPlayer();
-        }
+        reinit: initMusicPlayer
     };
 })();
 </script>
-
-<style>
- 
-#music-player-container {
-    position: relative;
-    z-index: 9999;
-}
-
- 
-.music-player-fixed {
-     
-    position: relative;
-}
-
- 
-.pjax-old {
-    opacity: 0.8;
-    transition: opacity 0.3s ease-out;
-}
-
-.pjax-new {
-    opacity: 0;
-    animation: fadeIn 0.3s ease-in forwards;
-}
-
-@keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
-}
-</style>
     </body>
 </html>
