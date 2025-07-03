@@ -6,7 +6,7 @@
 
 <link rel='canonical' href='https://GZhiqing.github.io/404.html'>
 
-<link rel="stylesheet" href="/scss/style.min.f2b2d189dea2d22cd2b7eaa3703202a0be9d903dbac4ef51698ee7c7ff50c148.css"><meta property='og:title' content="404 Page not found">
+<link rel="stylesheet" href="/scss/style.min.66ee40c0a15933dbbc5285cdac1582561dcb5328b7af96dfa77712621f680116.css"><meta property='og:title' content="404 Page not found">
 <meta property='og:description' content="GZhiqing_BLOG">
 <meta property='og:url' content='https://GZhiqing.github.io/404.html'>
 <meta property='og:site_name' content='GZhiqing_BLOG'>
@@ -272,17 +272,117 @@
     }());
 </script>
 
+
+
+
+
+
+
+
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.css">
 <script src="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.js"></script>
 
 <script src="https://cdn.jsdelivr.net/npm/meting@2/dist/Meting.min.js"></script>
 
-<meting-js
-	server="netease"
-	type="playlist"
-    fixed="true"
-	id="2777427516">
-</meting-js>
+
+<div id="music-player-container" style="position: fixed; bottom: 0; left: 0; right: 0; z-index: 9999;">
+    <meting-js
+        server="netease"
+        type="playlist"
+        fixed="true"
+        id="2777427516">
+    </meting-js>
+</div>
+
+<script>
+
+document.addEventListener('DOMContentLoaded', function() {
+    
+    initMusicPlayer();
+});
+
+function initMusicPlayer() {
+    
+    if (typeof window.APlayer === 'undefined') {
+        setTimeout(initMusicPlayer, 100);
+        return;
+    }
+    
+    
+    const musicContainer = document.getElementById('music-player-container');
+    if (musicContainer && musicContainer.parentNode !== document.body) {
+        document.body.appendChild(musicContainer);
+    }
+}
+
+
+document.addEventListener('pjax:send', function() {
+    
+    const musicContainer = document.getElementById('music-player-container');
+    if (musicContainer) {
+        musicContainer.style.display = 'block';
+    }
+});
+
+document.addEventListener('pjax:complete', function() {
+    
+    const musicContainer = document.getElementById('music-player-container');
+    if (musicContainer && musicContainer.parentNode !== document.body) {
+        document.body.appendChild(musicContainer);
+    }
+});
+</script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/pjax/pjax.js"></script>
+<script>
+	
+    var pjax = new Pjax({
+        selectors: [".main-container"],
+        cacheBust: false
+    });
+
+    pjax._handleResponse = pjax.handleResponse;
+
+    pjax.handleResponse = function(responseText, request, href, options) {
+        if (request.responseText.match("<html")) {
+            
+            let newDom = new DOMParser().parseFromString(responseText, 'text/html');
+            
+            let bodyClass = newDom.body.className;
+            document.body.setAttribute("class", bodyClass);
+            
+            pjax._handleResponse(responseText, request, href, options);
+        } else {
+            
+        }
+    };
+
+    
+    document.addEventListener('pjax:send', function() {
+        
+        console.log('PJAX页面切换开始');
+    });
+
+    document.addEventListener('pjax:complete', function() {
+        
+        window.Stack.init();
+        
+        
+        const musicContainer = document.getElementById('music-player-container');
+        if (musicContainer && musicContainer.parentNode !== document.body) {
+            document.body.appendChild(musicContainer);
+        }
+        
+        
+        if (window.updatePageViewCount) {
+            window.updatePageViewCount();
+        }
+        
+        console.log('PJAX页面切换完成');
+    });
+</script>
+
 
   <script>
     function showHideView() {
