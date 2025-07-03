@@ -682,6 +682,13 @@
         }
         
         
+        if (!window.getViewCount || !window.incrementViewCount) {
+            console.warn('跨设备统计函数未初始化，稍后重试...');
+            setTimeout(updateViewCount, 100);
+            return;
+        }
+        
+        
         function hasViewedInSession(url) {
             return sessionStorage.getItem(`viewed_${url}`) === 'true';
         }
@@ -708,44 +715,52 @@
         
         
         const viewCountElements = document.querySelectorAll('.page-view-count');
+        console.log('找到阅读量显示元素:', viewCountElements.length);
+        
         viewCountElements.forEach(element => {
             const url = element.getAttribute('data-url');
             if (url) {
                 
                 const count = window.getViewCount(url);
                 element.textContent = count.toString();
+                console.log('更新显示:', url, '阅读量:', count);
             }
         });
         
         
         const viewCounts = document.querySelectorAll("#viewCount, .viewCount");
+        console.log('找到viewCount元素:', viewCounts.length);
+        
         viewCounts.forEach(ele => {
-            if (isArticlePage()) {
-                
-                ele.style.display = 'inline-flex';
-            } else {
-                
-                const isMobile = window.innerWidth <= 768;
-                ele.style.display = isMobile ? 'inline-flex' : 'none';
-            }
+            
+            ele.style.display = 'inline-flex';
+            ele.style.visibility = 'visible';
+            console.log('显示阅读量元素:', ele);
         });
     }
     
     
-    
-    document.addEventListener('DOMContentLoaded', function() {
+    function initializeViewCount() {
+        console.log('开始初始化阅读量统计...');
+        
         
         initSimpleCrossDeviceViewCount();
         
-        updateViewCount();
+        
+        setTimeout(() => {
+            console.log('执行阅读量更新...');
+            updateViewCount();
+        }, 50);
+    }
+    
+    
+    document.addEventListener('DOMContentLoaded', function() {
+        initializeViewCount();
     });
     
     
     if (document.readyState === 'complete' || document.readyState === 'interactive') {
-        
-        initSimpleCrossDeviceViewCount();
-        
-        updateViewCount();
+        initializeViewCount();
     }    
     
     function initSimpleCrossDeviceViewCount() {
@@ -865,8 +880,11 @@
         window._internal = {
             getDeviceFingerprint: getDeviceFingerprint,
             getCurrentDeviceCounts: getCurrentDeviceCounts,
-            setCurrentDeviceCounts: setCurrentDeviceCounts
+            setCurrentDeviceCounts: setCurrentDeviceCounts,
+            getAllDevicesCounts: getAllDevicesCounts
         };
+        
+        console.log('跨设备阅读量统计已初始化，设备ID:', getDeviceFingerprint());
     }
 
     
@@ -960,6 +978,51 @@
     console.log('- debugViewCount.clearSessionMarks() - 清除会话标记');
     console.log('- debugViewCount.getCurrentPageInfo() - 获取当前页面信息');
     console.log('- debugViewCount.setCount(url, count) - 手动设置阅读量');
+    console.log('- addTestData() - 添加测试数据');
+    console.log('- updateViewCount() - 手动更新显示');
+
+    
+    window.addTestData = function() {
+        console.log('添加测试数据...');
+        
+        
+        if (!window.incrementViewCount) {
+            setTimeout(window.addTestData, 100);
+            return;
+        }
+        
+        
+        const testUrls = [
+            '/p/线性方程组的sor迭代法/',
+            '/p/myfirstblog/',
+            '/p/test-chinese/',
+            '/p/markdown-syntax-guide/',
+            '/p/placeholder-text/',
+            '/p/math-typesetting/',
+            '/p/emoji-support/'
+        ];
+        
+        testUrls.forEach((url, index) => {
+            
+            const count = Math.floor(Math.random() * 50) + 10;
+            for (let i = 0; i < count; i++) {
+                window.incrementViewCount(url);
+            }
+        });
+        
+        console.log('测试数据已添加，刷新页面查看效果');
+        
+        updateViewCount();
+    };
+    
+    
+    setTimeout(() => {
+        const hasTestData = Object.keys(window.getStoredCounts()).length > 0;
+        if (!hasTestData) {
+            console.log('检测到没有阅读量数据，自动添加测试数据...');
+            window.addTestData();
+        }
+    }, 200);
 
     
 </script>
