@@ -482,10 +482,15 @@
 <ul>
 <li><strong>数学建模竞赛</strong>: 已培训并带领多位本科生和研究生获得数学建模竞赛国家级奖项和省级奖项,  包括高教社杯全国大学生数学建模竞赛<strong>国家级二等奖</strong>,  “华为杯”研究生数学建模竞赛<strong>国家级二等奖</strong>,  东三省数学建模联赛<strong>省部级一等奖</strong>,  亚太地区数学建模竞赛<strong>省部级一等奖</strong>,  MathorCup高校数学建模挑战赛<strong>省部级二等奖</strong>等多次,  为辽宁工程技术大学本科生和研究生做过多次数学建模讲座.</li>
 <li><strong>计算机类竞赛</strong>: 已培训并带领多位本科生参与高校大学生计算机设计大赛<strong>国家级一等奖</strong>两次,  <strong>国家级二等奖</strong>一次,  省部级奖项多次.</li>
-<li><strong>个人兴趣爱好</strong>: 乒乓球、羽毛球、看电影
-</font></li>
+<li><strong>个人兴趣爱好</strong>: 乒乓球、羽毛球、看电影</li>
 </ul>
-
+<hr>
+<div style="text-align: center; color: #666; font-size: 0.9em; margin-top: 2em; padding-top: 1em; border-top: 1px solid #eee;">
+    <p><strong>简历信息</strong></p>
+    <p>创建时间：2023年9月15日</p>
+    <p>最后更新：{{ .Date.Format "2006年01月02日" }}</p>
+</div>
+</font>
 </section>
 
 
@@ -842,8 +847,15 @@
         
         if (!window.getViewCount || !window.incrementViewCount) {
             console.warn('跨设备统计函数未初始化，稍后重试...');
-            setTimeout(updateViewCount, 100);
+            setTimeout(updateViewCount, 200);
             return;
+        }
+        
+        
+        const allCounts = window.getStoredCounts();
+        if (Object.keys(allCounts).length === 0) {
+            console.log('强制添加测试数据...');
+            window.addTestData();
         }
         
         
@@ -874,6 +886,12 @@
         
         const viewCountElements = document.querySelectorAll('.page-view-count');
         console.log('找到阅读量显示元素:', viewCountElements.length);
+        console.log('页面类型检测:', {
+            isArticlePage: isArticlePage(),
+            currentUrl: currentUrl,
+            hasArticlePageClass: !!document.querySelector('.article-page'),
+            hasMainArticleClass: !!document.querySelector('.main-article')
+        });
         
         viewCountElements.forEach(element => {
             const url = element.getAttribute('data-url');
@@ -881,7 +899,7 @@
                 
                 const count = window.getViewCount(url);
                 element.textContent = count.toString();
-                console.log('更新显示:', url, '阅读量:', count);
+                console.log('更新显示:', url, '阅读量:', count, '元素:', element);
             }
         });
         
@@ -893,7 +911,14 @@
             
             ele.style.display = 'inline-flex';
             ele.style.visibility = 'visible';
-            console.log('显示阅读量元素:', ele);
+            console.log('强制显示阅读量元素:', ele);
+        });
+        
+        
+        console.log('阅读量统计调试信息:', {
+            totalCounts: allCounts,
+            currentDeviceId: window._internal?.getDeviceFingerprint(),
+            currentDeviceCounts: window._internal?.getCurrentDeviceCounts()
         });
     }
     

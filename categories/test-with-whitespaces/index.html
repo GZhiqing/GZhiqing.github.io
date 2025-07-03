@@ -582,8 +582,15 @@
         
         if (!window.getViewCount || !window.incrementViewCount) {
             console.warn('跨设备统计函数未初始化，稍后重试...');
-            setTimeout(updateViewCount, 100);
+            setTimeout(updateViewCount, 200);
             return;
+        }
+        
+        
+        const allCounts = window.getStoredCounts();
+        if (Object.keys(allCounts).length === 0) {
+            console.log('强制添加测试数据...');
+            window.addTestData();
         }
         
         
@@ -614,6 +621,12 @@
         
         const viewCountElements = document.querySelectorAll('.page-view-count');
         console.log('找到阅读量显示元素:', viewCountElements.length);
+        console.log('页面类型检测:', {
+            isArticlePage: isArticlePage(),
+            currentUrl: currentUrl,
+            hasArticlePageClass: !!document.querySelector('.article-page'),
+            hasMainArticleClass: !!document.querySelector('.main-article')
+        });
         
         viewCountElements.forEach(element => {
             const url = element.getAttribute('data-url');
@@ -621,7 +634,7 @@
                 
                 const count = window.getViewCount(url);
                 element.textContent = count.toString();
-                console.log('更新显示:', url, '阅读量:', count);
+                console.log('更新显示:', url, '阅读量:', count, '元素:', element);
             }
         });
         
@@ -633,7 +646,14 @@
             
             ele.style.display = 'inline-flex';
             ele.style.visibility = 'visible';
-            console.log('显示阅读量元素:', ele);
+            console.log('强制显示阅读量元素:', ele);
+        });
+        
+        
+        console.log('阅读量统计调试信息:', {
+            totalCounts: allCounts,
+            currentDeviceId: window._internal?.getDeviceFingerprint(),
+            currentDeviceCounts: window._internal?.getCurrentDeviceCounts()
         });
     }
     
