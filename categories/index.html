@@ -621,23 +621,37 @@
         }
         
         
+        function hasViewedInSession(url) {
+            return sessionStorage.getItem(`viewed_${url}`) === 'true';
+        }
+        
+        function markViewedInSession(url) {
+            sessionStorage.setItem(`viewed_${url}`, 'true');
+        }
+        
+        
+        if (isArticlePage()) {
+            
+            const articleUrl = currentUrl;
+            
+            
+            if (!hasViewedInSession(articleUrl)) {
+                
+                const newCount = window.incrementViewCount(articleUrl);
+                markViewedInSession(articleUrl);
+                console.log('文章页面访问计数:', articleUrl, '当前阅读量:', newCount);
+            } else {
+                console.log('本次会话已计数过，跳过:', articleUrl);
+            }
+        }
+        
+        
         const viewCountElements = document.querySelectorAll('.page-view-count');
         viewCountElements.forEach(element => {
             const url = element.getAttribute('data-url');
             if (url) {
-                let count = window.getViewCount(url);
                 
-                
-                const isCurrentPage = url === currentUrl || 
-                                     url + '/' === currentUrl || 
-                                     url === currentUrl + '/';
-                
-                if (isCurrentPage && isArticlePage()) {
-                    
-                    count = window.incrementViewCount(url);
-                    console.log('页面访问计数:', url, '当前阅读量:', count);
-                }
-                
+                const count = window.getViewCount(url);
                 element.textContent = count.toString();
             }
         });
@@ -780,11 +794,111 @@
         window.getStoredCounts = getAllDevicesCounts;
         window.setStoredCounts = setCurrentDeviceCounts;
         window.incrementViewCount = function(url) {
+            
             incrementCurrentDeviceCount(url);
             return getTotalViewCount(url);
         };
         window.getViewCount = getTotalViewCount;
+        
+        
+        window._internal = {
+            getDeviceFingerprint: getDeviceFingerprint,
+            getCurrentDeviceCounts: getCurrentDeviceCounts,
+            setCurrentDeviceCounts: setCurrentDeviceCounts
+        };
     }
+
+    
+    window.debugViewCount = {
+        
+        showAllCounts: function() {
+            const allCounts = window.getStoredCounts();
+            console.table(allCounts);
+            return allCounts;
+        },
+        
+        
+        showCurrentDeviceCounts: function() {
+            const deviceCounts = window._internal.getCurrentDeviceCounts();
+            console.table(deviceCounts);
+            return deviceCounts;
+        },
+        
+        
+        clearAllCounts: function() {
+            const keys = [];
+            for (let i = 0; i < localStorage.length; i++) {
+                const key = localStorage.key(i);
+                if (key && key.startsWith('page_view_counts_')) {
+                    keys.push(key);
+                }
+            }
+            keys.forEach(key => localStorage.removeItem(key));
+            console.log('已清除所有阅读量数据');
+        },
+        
+        
+        clearSessionMarks: function() {
+            const keys = [];
+            for (let i = 0; i < sessionStorage.length; i++) {
+                const key = sessionStorage.key(i);
+                if (key && key.startsWith('viewed_')) {
+                    keys.push(key);
+                }
+            }
+            keys.forEach(key => sessionStorage.removeItem(key));
+            console.log('已清除会话计数标记');
+        },
+        
+        
+        setCount: function(url, count) {
+            const deviceCounts = window._internal.getCurrentDeviceCounts();
+            deviceCounts[url] = count;
+            window._internal.setCurrentDeviceCounts(deviceCounts);
+            console.log(`已设置 ${url} 在当前设备的阅读量为 ${count}`);
+        },
+        
+        
+        getCurrentPageInfo: function() {
+            const info = {
+                url: window.location.pathname,
+                isArticlePage: document.querySelector('.article-page') !== null,
+                hasViewedInSession: sessionStorage.getItem(`viewed_${window.location.pathname}`) === 'true',
+                currentCount: window.getViewCount(window.location.pathname),
+                deviceId: window._internal.getDeviceFingerprint()
+            };
+            console.log('当前页面信息:', info);
+            return info;
+        },
+        
+        
+        showAllDevicesDetails: function() {
+            const allDevices = {};
+            for (let i = 0; i < localStorage.length; i++) {
+                const key = localStorage.key(i);
+                if (key && key.startsWith('page_view_counts_')) {
+                    const deviceId = key.replace('page_view_counts_', '');
+                    try {
+                        allDevices[deviceId] = JSON.parse(localStorage.getItem(key));
+                    } catch (error) {
+                        console.warn('Failed to parse counts from key:', key);
+                    }
+                }
+            }
+            console.log('所有设备的阅读量详情:', allDevices);
+            return allDevices;
+        }
+    };
+    
+    
+    console.log('阅读量调试工具已加载，可用命令:');
+    console.log('- debugViewCount.showAllCounts() - 查看所有设备的总阅读量');
+    console.log('- debugViewCount.showCurrentDeviceCounts() - 查看当前设备阅读量');
+    console.log('- debugViewCount.showAllDevicesDetails() - 查看所有设备的详细数据');
+    console.log('- debugViewCount.clearAllCounts() - 清除所有阅读量');
+    console.log('- debugViewCount.clearSessionMarks() - 清除会话标记');
+    console.log('- debugViewCount.getCurrentPageInfo() - 获取当前页面信息');
+    console.log('- debugViewCount.setCount(url, count) - 手动设置阅读量');
 
     
 </script>
