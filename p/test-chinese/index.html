@@ -843,6 +843,10 @@
 
 
     
+    window.pageLoadId = Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+    console.log('页面加载ID:', window.pageLoadId);
+
+    
     function updateViewCount() {
         const currentUrl = window.location.pathname;
         
@@ -867,25 +871,29 @@
         }
         
         
-        function hasViewedInCurrentSession(url) {
-            const sessionKey = `current_session_${url}`;
-            const currentSessionId = sessionStorage.getItem('current_session_id');
-            const lastSessionForUrl = sessionStorage.getItem(sessionKey);
+        function hasCountedInThisPageLoad(url) {
             
-            
-            return currentSessionId && lastSessionForUrl === currentSessionId;
+            const pageLoadId = window.pageLoadId || (window.pageLoadId = Date.now() + '_' + Math.random().toString(36).substr(2, 9));
+            const countKey = `counted_${url}_${pageLoadId}`;
+            return sessionStorage.getItem(countKey) === 'true';
         }
         
-        function markViewedInCurrentSession(url) {
+        function markCountedInThisPageLoad(url) {
             
-            let currentSessionId = sessionStorage.getItem('current_session_id');
-            if (!currentSessionId) {
-                currentSessionId = Date.now() + '_' + Math.random().toString(36).substr(2, 9);
-                sessionStorage.setItem('current_session_id', currentSessionId);
+            const pageLoadId = window.pageLoadId || (window.pageLoadId = Date.now() + '_' + Math.random().toString(36).substr(2, 9));
+            const countKey = `counted_${url}_${pageLoadId}`;
+            sessionStorage.setItem(countKey, 'true');
+            
+            
+            const allKeys = [];
+            for (let i = 0; i < sessionStorage.length; i++) {
+                const key = sessionStorage.key(i);
+                if (key && key.startsWith(`counted_${url}_`)) {
+                    allKeys.push(key);
+                }
             }
             
-            const sessionKey = `current_session_${url}`;
-            sessionStorage.setItem(sessionKey, currentSessionId);
+            allKeys.sort().slice(0, -10).forEach(key => sessionStorage.removeItem(key));
         }
         
         
@@ -894,13 +902,13 @@
             const articleUrl = currentUrl;
             
             
-            if (!hasViewedInCurrentSession(articleUrl)) {
+            if (!hasCountedInThisPageLoad(articleUrl)) {
                 
                 const newCount = window.incrementViewCount(articleUrl);
-                markViewedInCurrentSession(articleUrl);
-                console.log('文章页面访问计数:', articleUrl, '当前阅读量:', newCount);
+                markCountedInThisPageLoad(articleUrl);
+                console.log('文章页面访问计数:', articleUrl, '当前阅读量:', newCount, '页面加载ID:', window.pageLoadId);
             } else {
-                console.log('当前页面会话已计数过，跳过:', articleUrl);
+                console.log('当前页面加载已计数过，跳过:', articleUrl);
             }
         }
         
@@ -1160,7 +1168,7 @@
             const keys = [];
             for (let i = 0; i < sessionStorage.length; i++) {
                 const key = sessionStorage.key(i);
-                if (key && (key.startsWith('viewed_') || key.startsWith('current_session_') || key === 'current_session_id')) {
+                if (key && (key.startsWith('viewed_') || key.startsWith('current_session_') || key.startsWith('counted_') || key === 'current_session_id')) {
                     keys.push(key);
                 }
             }
@@ -1179,15 +1187,15 @@
         
         getCurrentPageInfo: function() {
             const url = window.location.pathname;
-            const currentSessionId = sessionStorage.getItem('current_session_id');
-            const sessionKey = `current_session_${url}`;
-            const lastSessionForUrl = sessionStorage.getItem(sessionKey);
+            const pageLoadId = window.pageLoadId;
+            const countKey = `counted_${url}_${pageLoadId}`;
+            const hasCountedInThisLoad = sessionStorage.getItem(countKey) === 'true';
             
             const info = {
                 url: url,
                 isArticlePage: document.querySelector('.article-page') !== null,
-                currentSessionId: currentSessionId,
-                hasViewedInCurrentSession: currentSessionId && lastSessionForUrl === currentSessionId,
+                pageLoadId: pageLoadId,
+                hasCountedInThisLoad: hasCountedInThisLoad,
                 currentCount: window.getViewCount(url),
                 deviceId: window._internal.getDeviceFingerprint()
             };
