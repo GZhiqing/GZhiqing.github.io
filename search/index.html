@@ -6,7 +6,7 @@
 
 <link rel='canonical' href='https://GZhiqing.github.io/search/'>
 
-<link rel="stylesheet" href="/scss/style.min.7232e44dc7c765825c5c4835b780d73369fb2e529e7207daa71b3f2a874491a0.css"><meta property='og:title' content="搜索">
+<link rel="stylesheet" href="/scss/style.min.f2b2d189dea2d22cd2b7eaa3703202a0be9d903dbac4ef51698ee7c7ff50c148.css"><meta property='og:title' content="搜索">
 <meta property='og:description' content="">
 <meta property='og:url' content='https://GZhiqing.github.io/search/'>
 <meta property='og:site_name' content='GZhiqing_BLOG'>
@@ -39,8 +39,7 @@
         }
     })();
 </script>
-
-        <div id="pjax-container" class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky ">
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky ">
     <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="切换菜单">
         <span class="hamburger-box">
             <span class="hamburger-inner"></span>
@@ -233,15 +232,6 @@
     </ol>
 </aside>
 
-    <aside class="sidebar right-sidebar sticky">
-        
-            
-                
-            
-        
-    </aside>
-
-
             <main class="main full-width">
 <form action="/search/" class="search-form"data-json="/search/index.json">
     <p>
@@ -288,14 +278,12 @@
 
             </main>
         </div>
-        
-        
         <script 
                 src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.6/dist/vibrant.min.js"integrity="sha256-awcR2jno4kI5X0zL8ex0vi2z&#43;KMkF24hUW8WePSA9HM="crossorigin="anonymous"
                 
                 >
             </script><script type="text/javascript" src="/ts/main.js" defer></script>
-        <script>
+<script>
     (function () {
         const customFont = document.createElement('link');
         customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
@@ -306,62 +294,18 @@
         document.head.appendChild(customFont);
     }());
 </script>
-        
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.css">
 <script src="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.js"></script>
+
 <script src="https://cdn.jsdelivr.net/npm/meting@2/dist/Meting.min.js"></script>
 
 <meting-js
-    server="netease"
-    type="playlist"
+	server="netease"
+	type="playlist"
     fixed="true"
-    id="2777427516"
-    autoplay="false"
-    theme="#ad7a86"
-    loop="all"
-    order="random"
-    preload="auto"
-    volume="0.7"
-    lrcshow="false">
+	id="2777427516">
 </meting-js>
-
-<script>
-
-(function() {
-    let globalMusicPlayer = null;
-    
-    function initMusicPlayer() {
-        console.log('初始化音乐播放器...');
-        
-        
-        const checkMeting = setInterval(() => {
-            const musicElement = document.querySelector('meting-js');
-            if (musicElement && musicElement.aplayer) {
-                clearInterval(checkMeting);
-                globalMusicPlayer = musicElement.aplayer;
-                console.log('音乐播放器初始化完成');
-            }
-        }, 500);
-        
-        
-        setTimeout(() => clearInterval(checkMeting), 10000);
-    }
-    
-    
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', initMusicPlayer);
-    } else {
-        setTimeout(initMusicPlayer, 1000);
-    }
-    
-    
-    window.MusicPlayerManager = {
-        getPlayer: () => globalMusicPlayer,
-        reinit: initMusicPlayer
-    };
-})();
-</script>
 
   <script>
     function showHideView() {
@@ -381,65 +325,5 @@
     showHideView();
 </script>
 
-        
-        
-        <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
-        
-        
-        
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.css">
-<script src="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/meting@2/dist/Meting.min.js"></script>
-
-<meting-js
-    server="netease"
-    type="playlist"
-    fixed="true"
-    id="2777427516"
-    autoplay="false"
-    theme="#ad7a86"
-    loop="all"
-    order="random"
-    preload="auto"
-    volume="0.7"
-    lrcshow="false">
-</meting-js>
-
-<script>
-
-(function() {
-    let globalMusicPlayer = null;
-    
-    function initMusicPlayer() {
-        console.log('初始化音乐播放器...');
-        
-        
-        const checkMeting = setInterval(() => {
-            const musicElement = document.querySelector('meting-js');
-            if (musicElement && musicElement.aplayer) {
-                clearInterval(checkMeting);
-                globalMusicPlayer = musicElement.aplayer;
-                console.log('音乐播放器初始化完成');
-            }
-        }, 500);
-        
-        
-        setTimeout(() => clearInterval(checkMeting), 10000);
-    }
-    
-    
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', initMusicPlayer);
-    } else {
-        setTimeout(initMusicPlayer, 1000);
-    }
-    
-    
-    window.MusicPlayerManager = {
-        getPlayer: () => globalMusicPlayer,
-        reinit: initMusicPlayer
-    };
-})();
-</script>
     </body>
 </html>
