@@ -7,26 +7,10 @@
         <generator>Hugo -- gohugo.io</generator>
         <language>zh-cn</language>
         <copyright>GZQBLOG</copyright>
-        <lastBuildDate>Fri, 03 Jan 2025 16:00:00 +0800</lastBuildDate><atom:link href="https://GZhiqing.github.io/page/index.xml" rel="self" type="application/rss+xml" /><item>
-        <title>归档</title>
-        <link>https://GZhiqing.github.io/archives/</link>
-        <pubDate>Sun, 29 Sep 2024 00:00:00 +0000</pubDate>
-        
-        <guid>https://GZhiqing.github.io/archives/</guid>
-        <description></description>
-        </item>
-        <item>
-        <title>搜索</title>
-        <link>https://GZhiqing.github.io/search/</link>
-        <pubDate>Sun, 29 Sep 2024 00:00:00 +0000</pubDate>
-        
-        <guid>https://GZhiqing.github.io/search/</guid>
-        <description></description>
-        </item>
-        <item>
+        <lastBuildDate>Fri, 06 Jun 2025 16:00:00 +0800</lastBuildDate><atom:link href="https://GZhiqing.github.io/page/index.xml" rel="self" type="application/rss+xml" /><item>
         <title>简历</title>
         <link>https://GZhiqing.github.io/%E7%AE%80%E5%8E%86/</link>
-        <pubDate>Fri, 15 Sep 2023 10:00:00 +0800</pubDate>
+        <pubDate>Tue, 01 Oct 2024 10:00:00 +0800</pubDate>
         
         <guid>https://GZhiqing.github.io/%E7%AE%80%E5%8E%86/</guid>
         <description>&lt;font face=&#34;Times New Roman&#34; English&gt;
@@ -178,6 +162,22 @@
 &lt;/font&gt;&lt;/li&gt;
 &lt;/ul&gt;
 </description>
+        </item>
+        <item>
+        <title>归档</title>
+        <link>https://GZhiqing.github.io/archives/</link>
+        <pubDate>Sun, 29 Sep 2024 00:00:00 +0000</pubDate>
+        
+        <guid>https://GZhiqing.github.io/archives/</guid>
+        <description></description>
+        </item>
+        <item>
+        <title>搜索</title>
+        <link>https://GZhiqing.github.io/search/</link>
+        <pubDate>Sun, 29 Sep 2024 00:00:00 +0000</pubDate>
+        
+        <guid>https://GZhiqing.github.io/search/</guid>
+        <description></description>
         </item>
         
     </channel>
