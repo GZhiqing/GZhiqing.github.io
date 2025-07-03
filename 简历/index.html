@@ -10,7 +10,7 @@
 <meta property='og:description' content=" 基础信息 姓名：郭直清 性别：男 电话：(+86)18342832143 E-mail：Zhiqing_GUO@126.com 研究方向：露天开采理论与技术、智慧矿山、最优化理论与控制、数学建模与机器学习\n">
 <meta property='og:url' content='https://GZhiqing.github.io/%E7%AE%80%E5%8E%86/'>
 <meta property='og:site_name' content='GZhiqing_BLOG'>
-<meta property='og:type' content='article'><meta property='article:section' content='Page' />
+<meta property='og:type' content='article'><meta property='article:section' content='Page' /><meta property='article:published_time' content='2023-09-15T10:00:00&#43;08:00'/><meta property='article:modified_time' content='2025-01-03T16:00:00&#43;08:00'/>
 <meta name="twitter:title" content="简历">
 <meta name="twitter:description" content=" 基础信息 姓名：郭直清 性别：男 电话：(+86)18342832143 E-mail：Zhiqing_GUO@126.com 研究方向：露天开采理论与技术、智慧矿山、最优化理论与控制、数学建模与机器学习\n">
     <link rel="shortcut icon" href="/FX.svg" />
@@ -312,7 +312,35 @@
     
     <footer class="article-time">
         
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published">
+                    创建时间：2023-09-15</time>
+            </div>
+        
 
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--updated">
+                    更新时间：2025-01-03</time>
+            </div>
         
 
         
@@ -482,22 +510,29 @@
 <ul>
 <li><strong>数学建模竞赛</strong>: 已培训并带领多位本科生和研究生获得数学建模竞赛国家级奖项和省级奖项,  包括高教社杯全国大学生数学建模竞赛<strong>国家级二等奖</strong>,  “华为杯”研究生数学建模竞赛<strong>国家级二等奖</strong>,  东三省数学建模联赛<strong>省部级一等奖</strong>,  亚太地区数学建模竞赛<strong>省部级一等奖</strong>,  MathorCup高校数学建模挑战赛<strong>省部级二等奖</strong>等多次,  为辽宁工程技术大学本科生和研究生做过多次数学建模讲座.</li>
 <li><strong>计算机类竞赛</strong>: 已培训并带领多位本科生参与高校大学生计算机设计大赛<strong>国家级一等奖</strong>两次,  <strong>国家级二等奖</strong>一次,  省部级奖项多次.</li>
-<li><strong>个人兴趣爱好</strong>: 乒乓球、羽毛球、看电影</li>
+<li><strong>个人兴趣爱好</strong>: 乒乓球、羽毛球、看电影
+</font></li>
 </ul>
-<hr>
-<div style="text-align: center; color: #666; font-size: 0.9em; margin-top: 2em; padding-top: 1em; border-top: 1px solid #eee;">
-    <p><strong>简历信息</strong></p>
-    <p>创建时间：2023年9月15日</p>
-    <p>最后更新：{{ .Date.Format "2006年01月02日" }}</p>
-</div>
-</font>
+
 </section>
 
 
     <footer class="article-footer">
     
 
-    </footer>
+    <section class="article-lastmod">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+        <span>
+            最后更新于 Jan 03, 2025 16:00 CST
+        </span>
+    </section></footer>
 
 
     
@@ -853,18 +888,24 @@
         
         
         const allCounts = window.getStoredCounts();
+        console.log('当前所有阅读量数据:', allCounts);
         if (Object.keys(allCounts).length === 0) {
             console.log('强制添加测试数据...');
             window.addTestData();
         }
         
         
-        function hasViewedInSession(url) {
-            return sessionStorage.getItem(`viewed_${url}`) === 'true';
+        function hasViewedRecently(url) {
+            const lastViewTime = localStorage.getItem(`last_view_${url}`);
+            if (!lastViewTime) return false;
+            
+            
+            const timeDiff = Date.now() - parseInt(lastViewTime);
+            return timeDiff < 30000; 
         }
         
-        function markViewedInSession(url) {
-            sessionStorage.setItem(`viewed_${url}`, 'true');
+        function markViewedNow(url) {
+            localStorage.setItem(`last_view_${url}`, Date.now().toString());
         }
         
         
@@ -873,13 +914,13 @@
             const articleUrl = currentUrl;
             
             
-            if (!hasViewedInSession(articleUrl)) {
+            if (!hasViewedRecently(articleUrl)) {
                 
                 const newCount = window.incrementViewCount(articleUrl);
-                markViewedInSession(articleUrl);
+                markViewedNow(articleUrl);
                 console.log('文章页面访问计数:', articleUrl, '当前阅读量:', newCount);
             } else {
-                console.log('本次会话已计数过，跳过:', articleUrl);
+                console.log('30秒内已计数过，跳过:', articleUrl);
             }
         }
         
@@ -931,9 +972,44 @@
         
         
         setTimeout(() => {
+            const hasTestData = Object.keys(window.getStoredCounts()).length > 0;
+            if (!hasTestData) {
+                console.log('检测到没有阅读量数据，立即添加测试数据...');
+                addTestDataNow();
+            }
+        }, 10);
+        
+        
+        setTimeout(() => {
             console.log('执行阅读量更新...');
             updateViewCount();
-        }, 50);
+        }, 100);
+    }
+    
+    
+    function addTestDataNow() {
+        console.log('立即添加测试数据...');
+        
+        
+        const testUrls = [
+            '/p/线性方程组的sor迭代法/',
+            '/p/myfirstblog/',
+            '/p/test-chinese/',
+            '/p/markdown-syntax-guide/',
+            '/p/placeholder-text/',
+            '/p/math-typesetting/',
+            '/p/emoji-support/'
+        ];
+        
+        testUrls.forEach((url, index) => {
+            
+            const count = Math.floor(Math.random() * 50) + 10;
+            for (let i = 0; i < count; i++) {
+                window.incrementViewCount(url);
+            }
+        });
+        
+        console.log('测试数据已添加');
     }
     
     
@@ -1163,16 +1239,19 @@
     console.log('- debugViewCount.setCount(url, count) - 手动设置阅读量');
     console.log('- addTestData() - 添加测试数据');
     console.log('- updateViewCount() - 手动更新显示');
-
-    
     window.addTestData = function() {
         console.log('添加测试数据...');
         
         
         if (!window.incrementViewCount) {
-            setTimeout(window.addTestData, 100);
+            console.log('函数未初始化，等待...');
+            setTimeout(window.addTestData, 200);
             return;
         }
+        
+        
+        const deviceCounts = window._internal.getCurrentDeviceCounts();
+        console.log('清除前的数据:', deviceCounts);
         
         
         const testUrls = [
@@ -1187,27 +1266,20 @@
         
         testUrls.forEach((url, index) => {
             
-            const count = Math.floor(Math.random() * 50) + 10;
-            for (let i = 0; i < count; i++) {
-                window.incrementViewCount(url);
-            }
+            const count = 25 + index * 5;
+            
+            const currentCounts = window._internal.getCurrentDeviceCounts();
+            currentCounts[url] = count;
+            window._internal.setCurrentDeviceCounts(currentCounts);
+            console.log(`设置 ${url} 阅读量为 ${count}`);
         });
         
-        console.log('测试数据已添加，刷新页面查看效果');
+        console.log('测试数据已添加，当前数据:', window._internal.getCurrentDeviceCounts());
+        console.log('所有设备总数据:', window.getStoredCounts());
         
-        updateViewCount();
+        
+        setTimeout(updateViewCount, 100);
     };
-    
-    
-    setTimeout(() => {
-        const hasTestData = Object.keys(window.getStoredCounts()).length > 0;
-        if (!hasTestData) {
-            console.log('检测到没有阅读量数据，自动添加测试数据...');
-            window.addTestData();
-        }
-    }, 200);
-
-    
 </script>
 
     </body>

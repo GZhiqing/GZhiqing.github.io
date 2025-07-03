@@ -7,7 +7,7 @@
         <generator>Hugo -- gohugo.io</generator>
         <language>zh-cn</language>
         <copyright>GZQBLOG</copyright>
-        <lastBuildDate>Sun, 29 Sep 2024 00:00:00 +0000</lastBuildDate><atom:link href="https://GZhiqing.github.io/page/index.xml" rel="self" type="application/rss+xml" /><item>
+        <lastBuildDate>Fri, 03 Jan 2025 16:00:00 +0800</lastBuildDate><atom:link href="https://GZhiqing.github.io/page/index.xml" rel="self" type="application/rss+xml" /><item>
         <title>归档</title>
         <link>https://GZhiqing.github.io/archives/</link>
         <pubDate>Sun, 29 Sep 2024 00:00:00 +0000</pubDate>
@@ -26,7 +26,7 @@
         <item>
         <title>简历</title>
         <link>https://GZhiqing.github.io/%E7%AE%80%E5%8E%86/</link>
-        <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+        <pubDate>Fri, 15 Sep 2023 10:00:00 +0800</pubDate>
         
         <guid>https://GZhiqing.github.io/%E7%AE%80%E5%8E%86/</guid>
         <description>&lt;font face=&#34;Times New Roman&#34; English&gt;
@@ -174,15 +174,10 @@
 &lt;ul&gt;
 &lt;li&gt;&lt;strong&gt;数学建模竞赛&lt;/strong&gt;: 已培训并带领多位本科生和研究生获得数学建模竞赛国家级奖项和省级奖项,  包括高教社杯全国大学生数学建模竞赛&lt;strong&gt;国家级二等奖&lt;/strong&gt;,  “华为杯”研究生数学建模竞赛&lt;strong&gt;国家级二等奖&lt;/strong&gt;,  东三省数学建模联赛&lt;strong&gt;省部级一等奖&lt;/strong&gt;,  亚太地区数学建模竞赛&lt;strong&gt;省部级一等奖&lt;/strong&gt;,  MathorCup高校数学建模挑战赛&lt;strong&gt;省部级二等奖&lt;/strong&gt;等多次,  为辽宁工程技术大学本科生和研究生做过多次数学建模讲座.&lt;/li&gt;
 &lt;li&gt;&lt;strong&gt;计算机类竞赛&lt;/strong&gt;: 已培训并带领多位本科生参与高校大学生计算机设计大赛&lt;strong&gt;国家级一等奖&lt;/strong&gt;两次,  &lt;strong&gt;国家级二等奖&lt;/strong&gt;一次,  省部级奖项多次.&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;个人兴趣爱好&lt;/strong&gt;: 乒乓球、羽毛球、看电影&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;个人兴趣爱好&lt;/strong&gt;: 乒乓球、羽毛球、看电影
+&lt;/font&gt;&lt;/li&gt;
 &lt;/ul&gt;
-&lt;hr&gt;
-&lt;div style=&#34;text-align: center; color: #666; font-size: 0.9em; margin-top: 2em; padding-top: 1em; border-top: 1px solid #eee;&#34;&gt;
-    &lt;p&gt;&lt;strong&gt;简历信息&lt;/strong&gt;&lt;/p&gt;
-    &lt;p&gt;创建时间：2023年9月15日&lt;/p&gt;
-    &lt;p&gt;最后更新：{{ .Date.Format &#34;2006年01月02日&#34; }}&lt;/p&gt;
-&lt;/div&gt;
-&lt;/font&gt;</description>
+</description>
         </item>
         
     </channel>

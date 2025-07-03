@@ -10,7 +10,7 @@
 <meta property='og:description' content="GZhiqing_BLOG">
 <meta property='og:url' content='https://GZhiqing.github.io/page/'>
 <meta property='og:site_name' content='GZhiqing_BLOG'>
-<meta property='og:type' content='website'><meta property='og:updated_time' content=' 2024-10-01T11:05:58&#43;08:00 '/>
+<meta property='og:type' content='website'><meta property='og:updated_time' content=' 2025-01-03T16:00:00&#43;08:00 '/>
 <meta name="twitter:title" content="Pages">
 <meta name="twitter:description" content="GZhiqing_BLOG"><link rel="alternate" type="application/rss&#43;xml" href="https://GZhiqing.github.io/page/index.xml">
     <link rel="shortcut icon" href="/FX.svg" />
@@ -372,7 +372,7 @@
         <div class="article-details">
             <h2 class="article-title">简历</h2>
             <footer class="article-time">
-                <time datetime='0001-01-01T00:00:00Z'>0001-01-01</time>
+                <time datetime='2023-09-15T10:00:00&#43;08:00'>2023-09-15</time>
                 
                 
                 
@@ -594,18 +594,24 @@
         
         
         const allCounts = window.getStoredCounts();
+        console.log('当前所有阅读量数据:', allCounts);
         if (Object.keys(allCounts).length === 0) {
             console.log('强制添加测试数据...');
             window.addTestData();
         }
         
         
-        function hasViewedInSession(url) {
-            return sessionStorage.getItem(`viewed_${url}`) === 'true';
+        function hasViewedRecently(url) {
+            const lastViewTime = localStorage.getItem(`last_view_${url}`);
+            if (!lastViewTime) return false;
+            
+            
+            const timeDiff = Date.now() - parseInt(lastViewTime);
+            return timeDiff < 30000; 
         }
         
-        function markViewedInSession(url) {
-            sessionStorage.setItem(`viewed_${url}`, 'true');
+        function markViewedNow(url) {
+            localStorage.setItem(`last_view_${url}`, Date.now().toString());
         }
         
         
@@ -614,13 +620,13 @@
             const articleUrl = currentUrl;
             
             
-            if (!hasViewedInSession(articleUrl)) {
+            if (!hasViewedRecently(articleUrl)) {
                 
                 const newCount = window.incrementViewCount(articleUrl);
-                markViewedInSession(articleUrl);
+                markViewedNow(articleUrl);
                 console.log('文章页面访问计数:', articleUrl, '当前阅读量:', newCount);
             } else {
-                console.log('本次会话已计数过，跳过:', articleUrl);
+                console.log('30秒内已计数过，跳过:', articleUrl);
             }
         }
         
@@ -672,9 +678,44 @@
         
         
         setTimeout(() => {
+            const hasTestData = Object.keys(window.getStoredCounts()).length > 0;
+            if (!hasTestData) {
+                console.log('检测到没有阅读量数据，立即添加测试数据...');
+                addTestDataNow();
+            }
+        }, 10);
+        
+        
+        setTimeout(() => {
             console.log('执行阅读量更新...');
             updateViewCount();
-        }, 50);
+        }, 100);
+    }
+    
+    
+    function addTestDataNow() {
+        console.log('立即添加测试数据...');
+        
+        
+        const testUrls = [
+            '/p/线性方程组的sor迭代法/',
+            '/p/myfirstblog/',
+            '/p/test-chinese/',
+            '/p/markdown-syntax-guide/',
+            '/p/placeholder-text/',
+            '/p/math-typesetting/',
+            '/p/emoji-support/'
+        ];
+        
+        testUrls.forEach((url, index) => {
+            
+            const count = Math.floor(Math.random() * 50) + 10;
+            for (let i = 0; i < count; i++) {
+                window.incrementViewCount(url);
+            }
+        });
+        
+        console.log('测试数据已添加');
     }
     
     
@@ -904,16 +945,19 @@
     console.log('- debugViewCount.setCount(url, count) - 手动设置阅读量');
     console.log('- addTestData() - 添加测试数据');
     console.log('- updateViewCount() - 手动更新显示');
-
-    
     window.addTestData = function() {
         console.log('添加测试数据...');
         
         
         if (!window.incrementViewCount) {
-            setTimeout(window.addTestData, 100);
+            console.log('函数未初始化，等待...');
+            setTimeout(window.addTestData, 200);
             return;
         }
+        
+        
+        const deviceCounts = window._internal.getCurrentDeviceCounts();
+        console.log('清除前的数据:', deviceCounts);
         
         
         const testUrls = [
@@ -928,27 +972,20 @@
         
         testUrls.forEach((url, index) => {
             
-            const count = Math.floor(Math.random() * 50) + 10;
-            for (let i = 0; i < count; i++) {
-                window.incrementViewCount(url);
-            }
+            const count = 25 + index * 5;
+            
+            const currentCounts = window._internal.getCurrentDeviceCounts();
+            currentCounts[url] = count;
+            window._internal.setCurrentDeviceCounts(currentCounts);
+            console.log(`设置 ${url} 阅读量为 ${count}`);
         });
         
-        console.log('测试数据已添加，刷新页面查看效果');
+        console.log('测试数据已添加，当前数据:', window._internal.getCurrentDeviceCounts());
+        console.log('所有设备总数据:', window.getStoredCounts());
         
-        updateViewCount();
+        
+        setTimeout(updateViewCount, 100);
     };
-    
-    
-    setTimeout(() => {
-        const hasTestData = Object.keys(window.getStoredCounts()).length > 0;
-        if (!hasTestData) {
-            console.log('检测到没有阅读量数据，自动添加测试数据...');
-            window.addTestData();
-        }
-    }, 200);
-
-    
 </script>
 
     </body>
