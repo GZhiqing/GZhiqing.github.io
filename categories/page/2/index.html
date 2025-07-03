@@ -6,7 +6,7 @@
 
 <link rel='canonical' href='https://GZhiqing.github.io/categories/'>
 
-<link rel="stylesheet" href="/scss/style.min.66ee40c0a15933dbbc5285cdac1582561dcb5328b7af96dfa77712621f680116.css"><meta property='og:title' content="Categories">
+<link rel="stylesheet" href="/scss/style.min.294fa05686aa8844d860d30b209cb90708470927fa82b58de9286bd0d1c344de.css"><meta property='og:title' content="Categories">
 <meta property='og:description' content="GZhiqing_BLOG">
 <meta property='og:url' content='https://GZhiqing.github.io/categories/'>
 <meta property='og:site_name' content='GZhiqing_BLOG'>
@@ -467,133 +467,228 @@
 </script>
 
 
-
-
-
-
-
-
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.css">
 <script src="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.js"></script>
 
 <script src="https://cdn.jsdelivr.net/npm/meting@2/dist/Meting.min.js"></script>
 
-
-<div id="music-player-container" style="position: fixed; bottom: 0; left: 0; right: 0; z-index: 9999;">
-    <meting-js
-        server="netease"
-        type="playlist"
-        fixed="true"
-        id="2777427516">
-    </meting-js>
-</div>
+<meting-js
+    server="netease"
+    type="playlist"
+    fixed="true"
+    id="2777427516">
+</meting-js>
 
 <script>
 
-document.addEventListener('DOMContentLoaded', function() {
-    
-    initMusicPlayer();
-});
-
-function initMusicPlayer() {
-    
-    if (typeof window.APlayer === 'undefined') {
-        setTimeout(initMusicPlayer, 100);
-        return;
-    }
+(function() {
+    let musicPlayer = null;
+    let stateRestored = false;
     
     
-    const musicContainer = document.getElementById('music-player-container');
-    if (musicContainer && musicContainer.parentNode !== document.body) {
-        document.body.appendChild(musicContainer);
-    }
-}
-
-
-document.addEventListener('pjax:send', function() {
-    
-    const musicContainer = document.getElementById('music-player-container');
-    if (musicContainer) {
-        musicContainer.style.display = 'block';
-    }
-});
-
-document.addEventListener('pjax:complete', function() {
-    
-    const musicContainer = document.getElementById('music-player-container');
-    if (musicContainer && musicContainer.parentNode !== document.body) {
-        document.body.appendChild(musicContainer);
-    }
-});
-</script>
-
-
-<script src="https://cdn.jsdelivr.net/npm/pjax/pjax.js"></script>
-<script>
-	
-    var pjax = new Pjax({
-        selectors: [".main-container"],
-        cacheBust: false
-    });
-
-    pjax._handleResponse = pjax.handleResponse;
-
-    pjax.handleResponse = function(responseText, request, href, options) {
-        if (request.responseText.match("<html")) {
+    function saveMusicState() {
+        if (window.aplayers && window.aplayers.length > 0) {
+            const player = window.aplayers[0];
+            const state = {
+                paused: player.audio.paused,
+                currentTime: player.audio.currentTime,
+                volume: player.audio.volume,
+                currentIndex: player.list.index,
+                timestamp: Date.now()
+            };
             
-            let newDom = new DOMParser().parseFromString(responseText, 'text/html');
-            
-            let bodyClass = newDom.body.className;
-            document.body.setAttribute("class", bodyClass);
-            
-            pjax._handleResponse(responseText, request, href, options);
-        } else {
-            
-        }
-    };
-
-    
-    document.addEventListener('pjax:send', function() {
-        
-        console.log('PJAX页面切换开始');
-    });
-
-    document.addEventListener('pjax:complete', function() {
-        
-        window.Stack.init();
-        
-        
-        const musicContainer = document.getElementById('music-player-container');
-        if (musicContainer && musicContainer.parentNode !== document.body) {
-            document.body.appendChild(musicContainer);
-        }
-        
-        
-        if (window.updatePageViewCount) {
-            window.updatePageViewCount();
-        }
-        
-        console.log('PJAX页面切换完成');
-    });
-</script>
-
-
-  <script>
-    function showHideView() {
-        
-        let viewCounts = document.querySelectorAll("#viewCount");
-        if (viewCounts) {
-            
-            let article =  document.querySelector(".article-page");
-            if (!article) {
-                viewCounts.forEach(ele => {
-                    ele.style.display = 'none';
-                });
+            try {
+                localStorage.setItem('music_player_state', JSON.stringify(state));
+            } catch (error) {
+                console.warn('Failed to save music state:', error);
             }
         }
     }
     
-    showHideView();
+    
+    function restoreMusicState() {
+        if (stateRestored) return;
+        
+        try {
+            const savedState = localStorage.getItem('music_player_state');
+            if (!savedState) return;
+            
+            const state = JSON.parse(savedState);
+            
+            
+            if (Date.now() - state.timestamp > 300000) {
+                localStorage.removeItem('music_player_state');
+                return;
+            }
+            
+            if (window.aplayers && window.aplayers.length > 0) {
+                const player = window.aplayers[0];
+                
+                
+                player.list.switch(state.currentIndex);
+                player.audio.currentTime = state.currentTime;
+                player.audio.volume = state.volume;
+                
+                if (!state.paused) {
+                    
+                    setTimeout(() => {
+                        player.play().catch(e => console.log('Auto-play prevented:', e));
+                    }, 1000);
+                }
+                
+                stateRestored = true;
+            }
+        } catch (error) {
+            console.warn('Failed to restore music state:', error);
+        }
+    }
+    
+    
+    function initMusicPlayer() {
+        
+        if (typeof window.APlayer === 'undefined') {
+            setTimeout(initMusicPlayer, 100);
+            return;
+        }
+        
+        
+        if (!window.aplayers || window.aplayers.length === 0) {
+            setTimeout(initMusicPlayer, 100);
+            return;
+        }
+        
+        const player = window.aplayers[0];
+        
+        
+        player.on('play', saveMusicState);
+        player.on('pause', saveMusicState);
+        player.on('timeupdate', function() {
+            
+            if (Math.floor(player.audio.currentTime) % 5 === 0) {
+                saveMusicState();
+            }
+        });
+        player.on('volumechange', saveMusicState);
+        player.on('listswitch', saveMusicState);
+        
+        
+        setTimeout(restoreMusicState, 500);
+    }
+    
+    
+    window.addEventListener('beforeunload', function() {
+        saveMusicState();
+    });
+    
+    
+    document.addEventListener('visibilitychange', function() {
+        if (document.hidden) {
+            saveMusicState();
+        }
+    });
+    
+    
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initMusicPlayer);
+    } else {
+        initMusicPlayer();
+    }
+})();
+</script>
+
+
+  <script>
+    
+    
+
+
+    
+    function updateViewCount() {
+        const storageKey = 'page_view_counts';
+        const currentUrl = window.location.pathname;
+        
+        
+        function getStoredCounts() {
+            try {
+                const stored = localStorage.getItem(storageKey);
+                return stored ? JSON.parse(stored) : {};
+            } catch (error) {
+                console.warn('Failed to get view counts from localStorage:', error);
+                return {};
+            }
+        }
+        
+        
+        function setStoredCounts(counts) {
+            try {
+                localStorage.setItem(storageKey, JSON.stringify(counts));
+            } catch (error) {
+                console.warn('Failed to save view counts to localStorage:', error);
+            }
+        }
+        
+        
+        function isArticlePage() {
+            return document.querySelector('.article-page') !== null;
+        }
+        
+        
+        function incrementViewCount(url) {
+            const counts = getStoredCounts();
+            counts[url] = (counts[url] || 0) + 1;
+            setStoredCounts(counts);
+            return counts[url];
+        }
+        
+        
+        function getViewCount(url) {
+            const counts = getStoredCounts();
+            return counts[url] || 0;
+        }
+        
+        
+        const viewCountElements = document.querySelectorAll('.page-view-count');
+        viewCountElements.forEach(element => {
+            const url = element.getAttribute('data-url');
+            if (url) {
+                let count = getViewCount(url);
+                
+                
+                const isCurrentPage = url === currentUrl || 
+                                     url + '/' === currentUrl || 
+                                     url === currentUrl + '/';
+                
+                if (isCurrentPage && isArticlePage()) {
+                    
+                    const sessionKey = 'session_viewed_' + url;
+                    if (!sessionStorage.getItem(sessionKey)) {
+                        count = incrementViewCount(url);
+                        sessionStorage.setItem(sessionKey, 'true');
+                    }
+                }
+                
+                element.textContent = count.toString();
+            }
+        });
+        
+        
+        if (!isArticlePage()) {
+            const viewCounts = document.querySelectorAll("#viewCount");
+            viewCounts.forEach(ele => {
+                ele.style.display = 'none';
+            });
+        }
+    }
+    
+    
+    document.addEventListener('DOMContentLoaded', function() {
+        updateViewCount();
+    });
+    
+    
+    if (document.readyState === 'complete' || document.readyState === 'interactive') {
+        updateViewCount();
+    }
 </script>
 
     </body>
