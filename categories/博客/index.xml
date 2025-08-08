@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+    <channel>
+        <title>博客 on GZhiqing_BLOG</title>
+        <link>https://GZhiqing.github.io/categories/%E5%8D%9A%E5%AE%A2/</link>
+        <description>Recent content in 博客 on GZhiqing_BLOG</description>
+        <generator>Hugo -- gohugo.io</generator>
+        <language>zh-cn</language>
+        <copyright>GZQBLOG</copyright>
+        <lastBuildDate>Sun, 29 Sep 2024 11:05:58 +0800</lastBuildDate><atom:link href="https://GZhiqing.github.io/categories/%E5%8D%9A%E5%AE%A2/index.xml" rel="self" type="application/rss+xml" /><item>
+        <title>我的第一个博客</title>
+        <link>https://GZhiqing.github.io/p/%E7%AC%AC%E4%B8%80%E4%B8%AA%E5%8D%9A%E5%AE%A2/</link>
+        <pubDate>Sun, 29 Sep 2024 11:05:58 +0800</pubDate>
+        
+        <guid>https://GZhiqing.github.io/p/%E7%AC%AC%E4%B8%80%E4%B8%AA%E5%8D%9A%E5%AE%A2/</guid>
+        <description>&lt;img src="https://GZhiqing.github.io/p/%E7%AC%AC%E4%B8%80%E4%B8%AA%E5%8D%9A%E5%AE%A2/My-blog.jpg" alt="Featured image of post 我的第一个博客" /&gt;&lt;h2 id=&#34;正文测试&#34;&gt;正文测试
+&lt;/h2&gt;&lt;h1 id=&#34;这是我的第一个博客&#34;&gt;这是我的第一个博客
+&lt;/h1&gt;&lt;h2 id=&#34;这是一个测试&#34;&gt;这是一个测试
+&lt;/h2&gt;</description>
+        </item>
+        
+    </channel>
+</rss>

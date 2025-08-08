@@ -1,0 +1,1008 @@
+<!DOCTYPE html>
+<html lang="zh-cn" dir="ltr">
+    <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1323&amp;path=livereload" data-no-instant defer></script><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="SOR迭代法">
+<title>线性方程组的SOR迭代法</title>
+
+<link rel='canonical' href='http://localhost:1323/p/%E7%BA%BF%E6%80%A7%E6%96%B9%E7%A8%8B%E7%BB%84%E7%9A%84sor%E8%BF%AD%E4%BB%A3%E6%B3%95/'>
+
+<link rel="stylesheet" href="/scss/style.min.950df16122d517d8e183651cd75c1f89ca57afde0e2ebfd61973707ece1e73fd.css"><meta property='og:title' content="线性方程组的SOR迭代法">
+<meta property='og:description' content="SOR迭代法">
+<meta property='og:url' content='http://localhost:1323/p/%E7%BA%BF%E6%80%A7%E6%96%B9%E7%A8%8B%E7%BB%84%E7%9A%84sor%E8%BF%AD%E4%BB%A3%E6%B3%95/'>
+<meta property='og:site_name' content='GZhiqing_BLOG'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:published_time' content='2024-10-01T11:05:58&#43;08:00'/><meta property='article:modified_time' content='2024-10-01T11:05:58&#43;08:00'/><meta property='og:image' content='http://localhost:1323/p/%E7%BA%BF%E6%80%A7%E6%96%B9%E7%A8%8B%E7%BB%84%E7%9A%84sor%E8%BF%AD%E4%BB%A3%E6%B3%95/%E7%BA%BF%E6%80%A7%E6%96%B9%E7%A8%8B%E7%BB%84%E7%9A%84SOR%E8%BF%AD%E4%BB%A3%E6%B3%95.jpeg' />
+<meta name="twitter:title" content="线性方程组的SOR迭代法">
+<meta name="twitter:description" content="SOR迭代法"><meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image" content='http://localhost:1323/p/%E7%BA%BF%E6%80%A7%E6%96%B9%E7%A8%8B%E7%BB%84%E7%9A%84sor%E8%BF%AD%E4%BB%A3%E6%B3%95/%E7%BA%BF%E6%80%A7%E6%96%B9%E7%A8%8B%E7%BB%84%E7%9A%84SOR%E8%BF%AD%E4%BB%A3%E6%B3%95.jpeg' />
+    <link rel="shortcut icon" href="/FX.svg" />
+
+    </head>
+    <body class="
+    article-page
+    ">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="切换菜单">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        
+            
+            <figure class="site-avatar">
+                <a href="/">
+                
+                    
+                    
+                    
+                        
+                        <img src="/img/TX_hu8490693693647931076.png" width="300"
+                            height="300" class="site-logo" loading="lazy" alt="Avatar">
+                    
+                
+                </a>
+                
+                    <span class="emoji">♑️</span>
+                
+            </figure>
+            
+        
+        
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">GZhiqing_BLOG</a></h1>
+            <h2 class="site-description">欢迎来到我的个人博客网站</h2>
+        </div>
+    </header><ol class="menu-social">
+            
+                <li>
+                    <a 
+                        href='mailto:Zhiqing_GUO@126.com'
+                        target="_blank"
+                        title="Email"
+                        rel="me"
+                    >
+                        
+                        
+                            <?xml version="1.0" standalone="no"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"><svg t="1727613179838" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="6395" xmlns:xlink="http://www.w3.org/1999/xlink" width="200" height="200"><path d="M960 804.096c0 43.072-34.88 78.016-77.888 78.016L297.728 882.112c-43.008 0-77.952-34.944-77.952-78.016L219.776 414.592c0-13.184 3.584-25.344 9.344-36.224L224.128 373.312c5.056-12.48 14.336-22.656 25.984-29.12l5.184 5.184C267.52 341.44 282.048 336.704 297.728 336.704l584.384 0c15.616 0 30.272 4.736 42.368 12.736l5.248-5.184c11.648 6.464 20.928 16.64 25.92 29.12l-4.992 5.056C956.416 389.248 960 401.408 960 414.592L960 804.096zM882.112 375.68 297.728 375.68c-4.8 0-9.344 0.96-13.632 2.56l278.272 278.272c15.232 15.168 39.872 15.168 55.104 0l278.272-278.272C891.52 376.64 886.848 375.68 882.112 375.68zM921.024 414.592c0-2.048-0.256-4.032-0.576-5.952l-275.456 275.392c-30.4 30.528-79.744 30.528-110.208 0L259.392 408.576c-0.32 1.984-0.64 3.968-0.64 6.016l0 389.504c0 21.568 17.408 38.976 38.976 38.976l584.384 0c21.504 0 38.848-17.408 38.848-38.976L920.96 414.592zM765.248 219.84c0-2.048-0.384-4.032-0.64-6.016l-83.904 83.904L625.6 297.728l114.24-114.304c-4.224-1.6-8.768-2.56-13.632-2.56l-584.32 0c-4.8 0-9.344 0.96-13.632 2.56L242.56 297.728 187.456 297.728 103.552 213.824C103.232 215.808 102.976 217.728 102.976 219.84l0 389.568c0 21.504 17.408 38.976 38.912 38.976l38.976 0 0 38.912L141.888 687.296C98.88 687.296 64 652.352 64 609.344L64 219.84c0-13.184 3.584-25.344 9.344-36.224L68.288 178.56c5.056-12.48 14.272-22.656 25.984-29.12l5.184 5.184c12.224-8 26.752-12.736 42.432-12.736l584.32 0c15.744 0 30.272 4.736 42.496 12.736l5.12-5.184c11.712 6.464 20.992 16.64 25.984 29.12L794.88 183.616c5.76 10.88 9.344 23.04 9.344 36.224l0 77.888-38.912 0L765.312 219.84z" fill="#272636" p-id="6396"></path></svg>
+                        
+                    </a>
+                </li>
+            
+                <li>
+                    <a 
+                        href='https://github.com/GZhiqing'
+                        target="_blank"
+                        title="GitHub"
+                        rel="me"
+                    >
+                        
+                        
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-brand-github" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M9 19c-4.3 1.4 -4.3 -2.5 -6 -3m12 5v-3.5c0 -1 .1 -1.4 -.5 -2c2.8 -.3 5.5 -1.4 5.5 -6a4.6 4.6 0 0 0 -1.3 -3.2a4.2 4.2 0 0 0 -.1 -3.2s-1.1 -.3 -3.5 1.3a12.3 12.3 0 0 0 -6.2 0c-2.4 -1.6 -3.5 -1.3 -3.5 -1.3a4.2 4.2 0 0 0 -.1 3.2a4.6 4.6 0 0 0 -1.3 3.2c0 4.6 2.7 5.7 5.5 6c-.6 .6 -.6 1.2 -.5 2v3.5" />
+</svg>
+
+
+
+                        
+                    </a>
+                </li>
+            
+                <li>
+                    <a 
+                        href='https://orcid.org/0000-0001-7701-2278'
+                        target="_blank"
+                        title="orcid"
+                        rel="me"
+                    >
+                        
+                        
+                            <?xml version="1.0" standalone="no"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"><svg t="1754647364826" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="8010" xmlns:xlink="http://www.w3.org/1999/xlink" width="200" height="200"><path d="M512 96C282.624 96 96 282.624 96 512s186.624 416 416 416 416-186.624 416-416S741.376 96 512 96z m0 64c194.784 0 352 157.216 352 352s-157.216 352-352 352S160 706.784 160 512 317.216 160 512 160z m-160 96a32 32 0 0 0 0 64 32 32 0 0 0 0-64z m-32 96v352h64V352h-64z m128 0v352h144c96.832 0 176-79.168 176-176S688.832 352 592 352H448z m64 64h80c62.208 0 112 49.792 112 112S654.208 640 592 640H512v-224z" p-id="8011" fill="#707070"></path></svg>
+                        
+                    </a>
+                </li>
+            
+                <li>
+                    <a 
+                        href='https://mp.weixin.qq.com/mp/homepage?__biz=MzI4NjM5MDUxOQ==&amp;hid=1&amp;sn=57ac6d447e309bf3a9ccd3cfaaa44c0d&amp;scene=18#wechat_redirect'
+                        target="_blank"
+                        title="微信公众号"
+                        rel="me"
+                    >
+                        
+                        
+                            <?xml version="1.0" standalone="no"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"><svg t="1727612847753" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4323" xmlns:xlink="http://www.w3.org/1999/xlink" width="200" height="200"><path d="M312.746667 381.866667m-42.666667 0a42.666667 42.666667 0 1 0 85.333333 0 42.666667 42.666667 0 1 0-85.333333 0Z" fill="#666666" p-id="4324"></path><path d="M514.986667 381.866667m-42.666667 0a42.666667 42.666667 0 1 0 85.333333 0 42.666667 42.666667 0 1 0-85.333333 0Z" fill="#666666" p-id="4325"></path><path d="M960 680.533333c0-97.706667-54.613333-182.613333-135.253333-226.133333-6.826667-203.093333-176.213333-367.786667-380.16-367.786667-209.92 0-380.586667 170.666667-380.586667 380.586667 0 92.16 32.853333 180.053333 93.013333 249.6l-25.173333 151.893333c-1.28 7.68 1.706667 15.36 7.68 20.48a21.76 21.76 0 0 0 21.76 2.986667l152.32-65.28c66.56 20.906667 130.133333 26.453333 190.293333 17.066667a256.426667 256.426667 0 0 0 198.826667 94.293333c51.2 0 99.84-15.36 141.653333-43.52l84.48 41.386667c2.986667 1.28 5.973333 2.133333 9.386667 2.133333a21.162667 21.162667 0 0 0 20.906667-24.746667l-21.333334-129.28c14.506667-33.28 22.186667-67.84 22.186667-103.68z m-640.426667 102.4a20.053333 20.053333 0 0 0-14.933333 0.853334l-123.733333 53.333333 20.48-123.306667a21.034667 21.034667 0 0 0-5.12-17.92 337.493333 337.493333 0 0 1-88.746667-228.266666c0-186.453333 151.466667-337.92 337.92-337.92 174.506667 0 320 135.253333 336.213333 306.346666a257.578667 257.578667 0 0 0-335.36 245.333334c0 44.373333 11.52 86.186667 31.573334 122.88-50.773333 3.413333-103.253333-2.986667-158.293334-21.333334z m533.333334 67.413334c-0.853333-0.426667-1.706667-0.426667-2.56-0.853334-1.706667-0.426667-2.986667-1.28-4.693334-1.28h-2.986666c-1.706667 0-3.413333 0-5.12 0.853334-0.853333 0.426667-1.706667 0.853333-2.986667 1.28-1.28 0.426667-2.56 0.853333-3.413333 1.706666-37.12 27.733333-81.493333 42.24-128 42.24-118.186667 0-214.613333-96-214.613334-214.613333s96-214.613333 214.613334-214.613333a214.485333 214.485333 0 0 1 194.133333 305.92c-0.426667 0.853333-0.426667 1.28-0.426667 2.133333-0.426667 1.28-0.853333 2.56-0.853333 4.266667 0 1.28-0.426667 2.986667 0 4.266666v2.133334l15.786667 94.293333-58.88-27.733333z" fill="#666666" p-id="4326"></path><path d="M774.4 626.346667m-42.666667 0a42.666667 42.666667 0 1 0 85.333334 0 42.666667 42.666667 0 1 0-85.333334 0Z" fill="#666666" p-id="4327"></path><path d="M622.933333 626.346667m-42.666666 0a42.666667 42.666667 0 1 0 85.333333 0 42.666667 42.666667 0 1 0-85.333333 0Z" fill="#666666" p-id="4328"></path></svg>
+                        
+                    </a>
+                </li>
+            
+        </ol><ol class="menu" id="main-menu">
+        
+        
+        
+        <li >
+            <a href='/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-home" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <polyline points="5 12 3 12 12 3 21 12 19 12" />
+  <path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7" />
+  <path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6" />
+</svg>
+
+
+
+                
+                <span>主页</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/%E7%AE%80%E5%8E%86/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-user" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="7" r="4" />
+  <path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" />
+</svg>
+
+
+
+                
+                <span>简历</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/archives/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-archive" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <rect x="3" y="4" width="18" height="4" rx="2" />
+  <path d="M5 8v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-10" />
+  <line x1="10" y1="12" x2="14" y2="12" />
+</svg>
+
+
+
+                
+                <span>归档</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/search/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-search" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="10" cy="10" r="7" />
+  <line x1="21" y1="21" x2="15" y2="15" />
+</svg>
+
+
+
+                
+                <span>搜索</span>
+            </a>
+        </li>
+        
+
+        
+        <li id="dark-mode-toggle">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+            <span>暗色模式</span>
+        </li>
+        
+
+                <li class="menu-bottom-section">
+        </li>
+    </ol>
+</aside>
+
+    <aside class="sidebar right-sidebar sticky">
+        
+            
+                
+    <section class="widget archives">
+        <div class="widget-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <line x1="5" y1="9" x2="19" y2="9" />
+  <line x1="5" y1="15" x2="19" y2="15" />
+  <line x1="11" y1="4" x2="7" y2="20" />
+  <line x1="17" y1="4" x2="13" y2="20" />
+</svg>
+
+
+
+        </div>
+        <h2 class="widget-title section-title">目录</h2>
+        
+        <div class="widget--toc">
+            <nav id="TableOfContents">
+  <ol>
+    <li><a href="#font-colorred迭代法收敛定理font"><font color=red>迭代法收敛定理</font></a></li>
+    <li><a href="#sor简介">SOR简介</a></li>
+    <li><a href="#sor算法推导">SOR算法推导</a></li>
+    <li><a href="#sor算法收敛性">SOR算法收敛性</a></li>
+    <li><a href="#实例分析">实例分析</a></li>
+    <li><a href="#font-colorblue小结font"><font color=blue>小结</font></a></li>
+    <li><a href="#代码实现">代码实现</a></li>
+    <li><a href="#参考文献与链接">参考文献与链接</a></li>
+  </ol>
+</nav>
+        </div>
+    </section>
+
+            
+        
+    </aside>
+
+
+            <main class="main full-width">
+    <article class="has-image main-article">
+    <header class="article-header">
+        <div class="article-image">
+            <a href="/p/%E7%BA%BF%E6%80%A7%E6%96%B9%E7%A8%8B%E7%BB%84%E7%9A%84sor%E8%BF%AD%E4%BB%A3%E6%B3%95/">
+                <img src="/p/%E7%BA%BF%E6%80%A7%E6%96%B9%E7%A8%8B%E7%BB%84%E7%9A%84sor%E8%BF%AD%E4%BB%A3%E6%B3%95/%E7%BA%BF%E6%80%A7%E6%96%B9%E7%A8%8B%E7%BB%84%E7%9A%84SOR%E8%BF%AD%E4%BB%A3%E6%B3%95_hu16469551935929863260.jpeg" 
+                        width="800"
+                        height="381" 
+                        srcset="/p/%E7%BA%BF%E6%80%A7%E6%96%B9%E7%A8%8B%E7%BB%84%E7%9A%84sor%E8%BF%AD%E4%BB%A3%E6%B3%95/%E7%BA%BF%E6%80%A7%E6%96%B9%E7%A8%8B%E7%BB%84%E7%9A%84SOR%E8%BF%AD%E4%BB%A3%E6%B3%95_hu16469551935929863260.jpeg 800w, /p/%E7%BA%BF%E6%80%A7%E6%96%B9%E7%A8%8B%E7%BB%84%E7%9A%84sor%E8%BF%AD%E4%BB%A3%E6%B3%95/%E7%BA%BF%E6%80%A7%E6%96%B9%E7%A8%8B%E7%BB%84%E7%9A%84SOR%E8%BF%AD%E4%BB%A3%E6%B3%95_hu18125008693027818584.jpeg 1600w"
+                        loading="lazy"
+                        alt="Featured image of post 线性方程组的SOR迭代法" />
+                
+            </a>
+        </div>
+    
+
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            <a href="/categories/%E7%BA%BF%E6%80%A7%E6%96%B9%E7%A8%8B%E8%BF%AD%E4%BB%A3%E6%96%B9%E6%B3%95/" >
+                线性方程迭代方法
+            </a>
+        
+            <a href="/categories/%E6%95%B0%E5%AD%A6/" >
+                数学
+            </a>
+        
+            <a href="/categories/%E6%95%B0%E5%80%BC%E5%88%86%E6%9E%90/" >
+                数值分析
+            </a>
+        
+    </header>
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/p/%E7%BA%BF%E6%80%A7%E6%96%B9%E7%A8%8B%E7%BB%84%E7%9A%84sor%E8%BF%AD%E4%BB%A3%E6%B3%95/">线性方程组的SOR迭代法</a>
+        </h2>
+    
+        
+        <h3 class="article-subtitle">
+            SOR迭代法
+        </h3>
+        
+    </div>
+
+    
+    
+    
+    
+    
+    <footer class="article-time">
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published">
+                    创建时间：2024-10-01</time>
+            </div>
+        
+
+        
+
+        
+    
+    </footer>
+    
+
+    
+</div>
+
+</header>
+
+
+    <section class="article-content">
+    
+    
+    <!-- +++
+title = '线性方程组的SOR迭代法'
+date = 2024-10-01T11:05:58+08:00
+draft = false
+
++++ -->
+<font face="Times New Roman">
+<blockquote>
+<h1 id="写在前面">写在前面
+</h1></blockquote>
+<ol>
+<li>迭代收敛定理</li>
+<li>SOR简介</li>
+<li>SOR算法推导</li>
+<li>SOR算法收敛性</li>
+<li>实例分析</li>
+<li>代码实现</li>
+<li>参考文献与链接</li>
+</ol>
+<blockquote>
+<h2 id="font-colorred迭代法收敛定理font"><font color=red>迭代法收敛定理</font>
+</h2></blockquote>
+<p><font color=blue>定理1(充要条件)：</font>
+矩阵$\mathbf{M}$的谱半径
+</p>
+$$ \rho \left( \mathbf{M} \right) =\mathop {\max} \limits_i\left\{ \lambda _i\left| i=1,2,\cdots n \right. \right\} <1\left( \lVert \mathbf{M} \rVert _2<1 \right) \,\, \tag{1}$$<p><font color=blue>定理2(充分条件)：</font>
+矩阵$\mathbf{M}$的某个算子范数
+</p>
+$$ \lVert \mathbf{M} \rVert <1 \tag{2} $$<blockquote>
+<h2 id="sor简介">SOR简介
+</h2></blockquote>
+<p>SOR是Successive Over Relaxation（逐次超松弛）的缩写。该方法是求解大型稀疏矩阵方程组的有效方法之一，也可看作为Gauss-Seidel迭代法的加速，Gauss-Seidel是SOR迭代的一种特殊形式。</p>
+<blockquote>
+<h2 id="sor算法推导">SOR算法推导
+</h2></blockquote>
+<p>将方程组$\mathbf{AX}=b$写成
+</p>
+$$
+a_{i 1} x_{1}+a_{i 2} x_{2}+\cdots+a_{i, i-1} x_{i-1}+a_{i i} x_{i} \cdots+a_{i n} x_{n}=b_{i}, \quad(i=1,2, \cdots, n)\tag{2.1}
+$$<p>
+则
+</p>
+$$
+\begin{aligned}
+&\Rightarrow a_{i i} x_{i}=b_{i}-\left(a_{i 1} x_{1}+a_{i 2} x_{2}+\cdots+a_{i, i-1} x_{i-1}\right)-\left(a_{i, i+1} x_{i+1}+\cdots+a_{i n} x_{n}\right)\\
+&\Rightarrow a_{i i} x_{i}=a_{i i} x_{i}+\left(b_{i}-a_{i 1} x_{1}-a_{i 2} x_{2}-\cdots-a_{i, i-1} x_{i-1}-a_{i i} x_{i}-a_{i, i+1} x_{i+1}-\cdots-a_{i n} x_{n}\right)\\
+&\Rightarrow x_{i}=x_{i}+\frac{1}{a_{i i}}\left(b_{i}-a_{i 1} x_{1}-a_{i 2} x_{2}-\cdots-a_{i, i-1} x_{i-1}-a_{i t} x_{i}-a_{i, i+1} x_{i+1}-\cdots-a_{i n} x_{n}\right)
+\end{aligned}
+$$<p>
+于是Gauss-Seidel迭代法可写成（$a_{i,i}\ne 0$）
+</p>
+$$
+\begin{array}{c}
+x_{i}^{(k+1)}=x_{i}^{(k)}+\frac{1}{a_{i i}}\left(b_{i}-a_{i 1} x_{1}^{(k+1)}-\cdots-a_{i, i-1} x_{i-1}^{(k+1)}-a_{i n} x_{i}^{(k)}-\cdots-a_{i n} x_{n}^{(k)}\right) \\
+=x_{i}^{(k)}+\frac{1}{a_{i i}}\left(b_{i}-\sum_{j=1}^{i-1} a_{i j} x_{j}^{(k+1)}-\sum_{j=i}^{n} a_{i j} x_{j}^{(k)}\right) \\
+r_{i}^{(k)}=\left(b_{i}-\sum_{j=1}^{i-1} a_{i j} x_{j}^{(k+1)}-\sum_{j=i}^{n} a_{i j} x_{j}^{(k)}\right), \quad i=1,2, \cdots, n
+\end{array}\tag{2.2}
+$$<p>
+记
+</p>
+$$
+r_{i}^{(k)}=\left(b_{i}-\sum_{j=1}^{i-1} a_{i j} x_{j}^{(k+1)}-\sum_{j=i}^{n} a_{i j} x_{j}^{(k)}\right), \quad i=1,2, \cdots, n
+$$<p>
+则(2.2)式可写成
+</p>
+$$
+x_{i}^{(k+1)}=x_{i}^{(k)}+\frac{1}{a_{i i}} r_{i}^{(k)}\tag{2.3}
+$$<p>
+由(2.3)式可看出，Gauss-Seidel迭代法的第$k+1$步的基础上每个分量上加上$\frac{1}{a_{i i}} r_{i}^{(k)}$。为了获得更快的收敛效果，在修正项的前面乘以一个参数$\omega$，于是得到逐次超松弛算法
+</p>
+$$ x_{i}^{(k+1)}=x_{i}^{(k)}+\frac{\omega}{a_{i i}} r_{i}^{(k)}, \quad i=1,2, \cdots, n\tag{2.4} $$<p>
+即
+</p>
+$$
+x_{i}^{(k+1)}=(1-\omega) x_{i}^{(k)}+\frac{\omega}{a_{i i}}\left(b_{i}-\sum_{j=1}^{i-1} a_{i j} x_{j}^{(k+1)}-\sum_{j=i+1}^{n} a_{i j} x_{j}^{(k)}\right), \quad i=1,2, \cdots, n\tag{2.5}
+$$<p>
+其矩阵形式为
+</p>
+$$
+\mathbf{X}^{(k+1)}=(1-\omega) \mathbf{X}^{(k)}+\omega \mathbf{D}^{-1}\left(b+\mathbf{L} \mathbf{X}^{(k)}+\mathbf{U} \mathbf{X}^{(k)}\right)\tag{2.6}
+$$<p>
+其中，$\mathbf{A=D-L-U}$
+</p>
+$$
+\mathbf{D}=\left( \begin{matrix}
+	a_{11}&		&		&		\\
+	&		a_{22}&		&		\\
+	&		&		\ddots&		\\
+	&		&		&		a_{nn}\\
+\end{matrix} \right),
+\mathbf{L}=\left( \begin{matrix}
+	0&		&		&		\\
+	a_{21}&		0&		&		\\
+	\vdots&		\ddots&		\ddots&		\\
+	a_{n1}&		a_{n2}&		\cdots&		0\\
+\end{matrix} \right) , 
+\mathbf{U}=\left( \begin{matrix}
+	0&		a_{12}&		\cdots&		a_{1n}\\
+	&		0&		\ddots&		a_{2n}\\
+	&		&		\ddots&		\vdots\\
+	&		&		&		0\\
+\end{matrix} \right)$$<blockquote>
+<h2 id="sor算法收敛性">SOR算法收敛性
+</h2></blockquote>
+<p>由(2.6)式有
+</p>
+$$
+\mathbf{DX}^{\left( k+1 \right)}=\left( 1-\omega \right) \mathbf{DX}^{\left( k \right)}+\omega \left( b+\mathbf{LX}^{\left( k+1 \right)}+\mathbf{UX}^{\left( k \right)} \right) 
+$$<p>
+即
+</p>
+$$
+\mathbf{D} \mathbf{X}^{(k+1)}-\omega \mathbf{L} \mathbf{X}^{(k+1)}=(1-\omega) \mathbf{D} \mathbf{X}^{(k)}+\omega \mathbf{U} \mathbf{X}^{(k)}+\omega b
+$$<p>
+于是有
+</p>
+$$
+\begin{array}{l}
+(\mathbf{D}-\omega \mathbf{L}) \mathbf{X}^{(k+1)}=[(1-\omega) \mathbf{D}+\omega \mathbf{U}] \mathbf{X}^{(k)}+\omega b \\
+\Rightarrow \mathbf{X}^{(k+1)}=(\mathbf{D}-\omega \mathbf{L})^{-1}[(1-\omega) \mathbf{D}+\omega \mathbf{U}] \mathbf{X}^{(k)}+\omega(\mathbf{D}-\omega \mathbf{L})^{-1} b
+\end{array}
+$$<p>
+记
+</p>
+$$
+\left\{\begin{array}{c}
+\mathbf{B}_{\omega}=(\mathbf{D}-\omega \mathbf{L})^{-1}[(1-\omega) \mathbf{D}+\omega \mathbf{U}] \\
+\mathbf{F}_{\omega}=\omega(\mathbf{D}-\omega \mathbf{L})^{-1} b
+\end{array}\right. \tag{3.1}
+$$<p>
+则有
+</p>
+$$
+\mathbf{X}^{(k+1)}=\mathbf{B_{\omega}} \mathbf(X)^{(k)}+\mathbf{F_{\omega}} \tag{3.2}
+$$<p>
+其中，$\mathbf{B_{ \omega}}$为SOR迭代矩阵。
+由收敛定理的<span style="color:blue;font-weight:bold;">定理1</span>和<span style="color:blue;font-weight:bold;">定理2</span>可知，SOR收敛的充要条件是$ \rho{(\mathbf{B_{\omega}})}<1 $或$ \lVert{(\mathbf{B_{\omega}}\rVert_2)}<1 $，可以看出SOR迭代法收敛与否或收敛的快慢都与松弛因子$\omega$有关，因此SOR迭代算法存在如下定理.<br>
+<span style="color:blue;font-weight:bold;">定理3: </span>SOR迭代法收敛的充要条件是松弛因子$0<\omega<2$ .
+证：由于SOR收敛，则$\rho{(\mathbf{B_{\omega}})}<1$。记$\mathbf{B_{\omega}}$的特征值为$\lambda _1,\lambda _2,\cdots ,\lambda _n$,而$n$阶矩阵的$n$个特征值之积等于其行列式之值，即
+</p>
+$$
+\left|\operatorname{det} \mathbf{B}_{\omega}\right|=\left|\lambda_{1} \lambda_{2} \cdots \lambda_{n}\right|
+$$<p>
+而
+</p>
+$$
+\left|\lambda_{i}\right| \leq\left|\rho\left(\mathbf{B}_{\omega}\right)\right|
+$$<p>
+故
+</p>
+$$
+\left|\operatorname{det} \mathbf{B}_{\omega}\right|=\left|\lambda_{1} \lambda_{2} \cdots \lambda_{n}\right| \leq\left[\rho\left(\mathbf{B}_{\omega}\right)\right]^{n}<1
+$$<p>
+<font color=blue>另一方面</font>，由
+</p>
+$$
+\mathbf{B}_{\omega}=(\mathbf{D}-\omega \mathbf{L})^{-1}[(1-\omega) \mathbf{D}+\omega \mathbf{U}]
+$$<p>
+有
+</p>
+$$
+\left|\operatorname{det} \mathbf{B}_{\omega}\right|=\left|\operatorname{det}(\mathbf{D}-\omega \mathbf{L})^{-1}\right| \cdot | \operatorname{det}[(1-\omega) \mathbf{D}+\omega \mathbf{U}]
+$$<p>
+即
+</p>
+$$
+\left|\operatorname{det} \mathbf{B}_{\omega}\right|=\frac{|\operatorname{det}[(1-\omega) \mathbf{D}+\omega \mathbf{U}]|}{|\operatorname{det}(\mathbf{D}-\omega \mathbf{L})|}=|1-\omega|^{n}
+$$<p>
+因此有$|1-\omega|^{n}<1$或者$|1-\omega|<1$,也即$0<\omega<2$.　　　　　　　　　　　$\square$<br>
+<font color = blue>定理4：</font>如果矩阵$\mathbf{A}$是对称正定的，则SOR法对于$0<\omega<2$是收敛的。</p>
+<blockquote>
+<h2 id="实例分析">实例分析
+</h2></blockquote>
+<p>用逐次超松弛（SOR）迭代法求解方程组$\mathbf{AX}=b$，其中矩阵$\mathbf{A}$为
+</p>
+$$
+\mathbf{A}=\left[\begin{array}{ccccccc}
+12 & -2 & 1 & & & & \\
+-2 & 12 & -2 & 1 & & & \\
+1 & -2 & 12 & -2 & 1 & & \\
+& \ddots & \ddots & \ddots & \ddots & \ddots & \\
+& & 1 & -2 & 12 & -2 & 1 \\
+& & & 1 & -2 & 12 & -2 \\
+& & & & 1 & -2 & 12
+\end{array}\right]\left[\begin{array}{c}
+x_{1} \\
+x_{2} \\
+x_{3} \\
+\vdots \\
+x_{18} \\
+x_{19} \\
+x_{20}
+\end{array}\right]=\left[\begin{array}{c}
+5 \\
+5 \\
+5 \\
+\vdots \\
+5 \\
+5 \\
+5
+\end{array}\right]\tag{4.1}
+$$<p>
+利用Matlab2016a软件求解(4.1)式（具体程序见第五节），讨论不同的松弛因子$\omega$对迭代速度的影响。其中参数设置为：最大迭代值为500。<br>
+由于(4.1)式是一个对称正定阵，且本文规定松弛因子$0<\omega<2$，因此由定理4可知，式(4.1)一定收敛，也即有解。求解的结果如下表。
+<font size=2><center>表1　不同$\omega$值对方程收敛速度的影响</center></font></p>
+<table align="center" style="width:100%;border:#000 solid; border-width:2px 0">
+<thead style="border-bottom:#000 2px solid;">
+<tr>
+<th style="border:0"><center> $\mathbf{\omega}$</center></th>
+<th style="border:0"><center>迭代次数</center></th>
+</tr>
+</thead>
+<tr>
+<td style="border:0"><center>0.3</center></td>
+<td style="border:0"><center>120</center></td>
+</tr>
+<tr>
+<td style="border:0"><center>0.6</center></td>
+<td style="border:0"><center>50</center></td>
+</tr>
+<tr>
+<td style="border:0"><center>0.9</center></td>
+<td style="border:0"><center>25</center></td>
+</tr>
+<tr>
+<td style="border:0"><center>1.2</center></td>
+<td style="border:0"><center>30</center></td>
+</tr>
+<tr>
+<td style="border:0"><center>1.5</center></td>
+<td style="border:0"><center>50</center></td>
+</tr>
+<tr>
+<td style="border:0"><center>1.8</center></td>
+<td style="border:0"><center>150</center></td>
+</tr>
+</table>
+<p>由表1或图1可知，<br>
+（1）当SOR迭代法松弛因子$\omega>1$时，$\omega$值越大，迭代的次数就越多，收敛速度就越慢，$\omega$越接近1时，迭代的次数越少，收敛速度越快；<br>
+（2）当SOR迭代法松弛因子$\omega<1$时，$\omega$越小，迭代的次数就越多，收敛速度就越慢，$\omega$越接近1时，迭代的次数越少，收敛速度越快；<br>
+（3)SOR迭代法松弛因子不在范围内时，系数矩阵的谱半径大于1，不收敛。
+<img src="/p/%E7%BA%BF%E6%80%A7%E6%96%B9%E7%A8%8B%E7%BB%84%E7%9A%84sor%E8%BF%AD%E4%BB%A3%E6%B3%95/%E7%BA%BF%E6%80%A7%E6%96%B9%E7%A8%8B%E7%BB%84%E7%9A%84SOR%E8%BF%AD%E4%BB%A3%E6%B3%95.jpeg"
+	width="1366"
+	height="650"
+	srcset="/p/%E7%BA%BF%E6%80%A7%E6%96%B9%E7%A8%8B%E7%BB%84%E7%9A%84sor%E8%BF%AD%E4%BB%A3%E6%B3%95/%E7%BA%BF%E6%80%A7%E6%96%B9%E7%A8%8B%E7%BB%84%E7%9A%84SOR%E8%BF%AD%E4%BB%A3%E6%B3%95_hu2635785908054667089.jpeg 480w, /p/%E7%BA%BF%E6%80%A7%E6%96%B9%E7%A8%8B%E7%BB%84%E7%9A%84sor%E8%BF%AD%E4%BB%A3%E6%B3%95/%E7%BA%BF%E6%80%A7%E6%96%B9%E7%A8%8B%E7%BB%84%E7%9A%84SOR%E8%BF%AD%E4%BB%A3%E6%B3%95_hu14905143993779534601.jpeg 1024w"
+	loading="lazy"
+	
+		alt="图1  不同$\omega$值时的SOR迭代曲线值"
+	
+	
+		class="gallery-image" 
+		data-flex-grow="210"
+		data-flex-basis="504px"
+	
+></p>
+<center><font color=black size=3>图1  不同$\omega$值时的SOR迭代曲线值 </font></center>
+<blockquote>
+<h2 id="font-colorblue小结font"><font color=blue>小结</font>
+</h2></blockquote>
+<ol>
+<li>在SOR迭代算法中，松弛因子$\omega$越接近1时，迭代的次数越小，收敛速度越快，故$\omega$最优值应选择$\omega=1$。</li>
+<li>在SOR迭代算法中，松弛因子$\omega$距离1越远时，迭代次数越多，收敛速度越慢。</li>
+<li>在SOR迭代算法中，松弛因子应选择$0<\omega<2$，当$\omega$超过这个范围时，不满足收敛定理，即谱半径不小于1，此时方程无解。</li>
+</ol>
+<blockquote>
+<h2 id="代码实现">代码实现
+</h2></blockquote>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span><span class="lnt">45
+</span><span class="lnt">46
+</span><span class="lnt">47
+</span><span class="lnt">48
+</span><span class="lnt">49
+</span><span class="lnt">50
+</span><span class="lnt">51
+</span><span class="lnt">52
+</span><span class="lnt">53
+</span><span class="lnt">54
+</span><span class="lnt">55
+</span><span class="lnt">56
+</span><span class="lnt">57
+</span><span class="lnt">58
+</span><span class="lnt">59
+</span><span class="lnt">60
+</span><span class="lnt">61
+</span><span class="lnt">62
+</span><span class="lnt">63
+</span><span class="lnt">64
+</span><span class="lnt">65
+</span><span class="lnt">66
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-javascript" data-lang="javascript"><span class="line"><span class="cl"><span class="nx">close</span> <span class="nx">all</span><span class="p">;</span><span class="nx">clear</span><span class="p">;</span><span class="nx">clc</span><span class="p">;</span><span class="o">%</span><span class="nx">清空环境变量</span>
+</span></span><span class="line"><span class="cl"><span class="nx">load</span><span class="p">(</span><span class="s1">&#39;A.mat&#39;</span><span class="p">);</span><span class="o">%</span><span class="nx">导入矩阵A</span>
+</span></span><span class="line"><span class="cl"><span class="nx">b</span><span class="o">=</span><span class="mi">5</span><span class="o">*</span><span class="nx">ones</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span><span class="mi">1</span><span class="p">);</span><span class="o">%</span><span class="nx">导入矩阵b</span>
+</span></span><span class="line"><span class="cl"><span class="nx">D</span><span class="o">=</span><span class="nx">diag</span><span class="p">(</span><span class="nx">diag</span><span class="p">(</span><span class="nx">A</span><span class="p">));</span><span class="o">%</span><span class="nx">求解对角阵</span>
+</span></span><span class="line"><span class="cl"><span class="nx">LA</span><span class="o">=</span><span class="nx">tril</span><span class="p">(</span><span class="nx">A</span><span class="p">);</span><span class="o">%</span><span class="nx">抽取下三角矩阵</span>
+</span></span><span class="line"><span class="cl"><span class="nx">U</span><span class="o">=</span><span class="nx">LA</span><span class="o">-</span><span class="nx">A</span><span class="p">;</span><span class="o">%</span><span class="nx">得到去除对角线元素的上三角阵</span>
+</span></span><span class="line"><span class="cl"><span class="nx">L</span><span class="o">=</span><span class="nx">D</span><span class="o">-</span><span class="nx">LA</span><span class="p">;</span><span class="o">%</span><span class="nx">得到去除对角线元素的下三角阵</span>
+</span></span><span class="line"><span class="cl"><span class="nx">XXX</span><span class="o">=</span><span class="p">[];</span><span class="o">%</span><span class="nx">存储不同松弛因子的迭代值</span>
+</span></span><span class="line"><span class="cl"><span class="nx">I</span><span class="o">=</span><span class="p">[];</span><span class="o">%</span><span class="nx">记录迭代终止次数</span>
+</span></span><span class="line"><span class="cl"><span class="k">for</span> <span class="nx">w</span><span class="o">=</span><span class="mf">0.3</span><span class="o">:</span><span class="mf">0.3</span><span class="o">:</span><span class="mi">2</span><span class="p">;</span><span class="o">%</span><span class="nx">设置松弛因子大小0</span><span class="o">&lt;</span><span class="nx">w</span><span class="o">&lt;</span><span class="mi">2</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">XX</span><span class="o">=</span><span class="p">[];</span>
+</span></span><span class="line"><span class="cl">    <span class="o">%%</span> <span class="nx">SOR迭代公式</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">M</span><span class="o">=</span><span class="p">(</span><span class="nx">D</span><span class="o">-</span><span class="nx">w</span><span class="o">*</span><span class="nx">L</span><span class="p">)</span><span class="err">\</span><span class="p">((</span><span class="mi">1</span><span class="o">-</span><span class="nx">w</span><span class="p">)</span><span class="o">*</span><span class="nx">D</span><span class="o">+</span><span class="nx">w</span><span class="o">*</span><span class="nx">U</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">f</span><span class="o">=</span><span class="nx">w</span><span class="o">*</span><span class="p">((</span><span class="nx">D</span><span class="o">-</span><span class="nx">w</span><span class="o">*</span><span class="nx">L</span><span class="p">)</span><span class="err">\</span><span class="nx">b</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">MaxEigM</span> <span class="o">=</span> <span class="nx">max</span><span class="p">(</span><span class="nx">abs</span><span class="p">(</span><span class="nx">eig</span><span class="p">(</span><span class="nx">M</span><span class="p">)));</span><span class="o">%</span><span class="nx">求谱半径</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">x</span><span class="o">=</span><span class="p">[];</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">x</span><span class="p">(</span><span class="o">:</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span><span class="o">=</span><span class="mf">5.</span><span class="o">*</span><span class="nx">randn</span><span class="p">(</span><span class="nx">size</span><span class="p">(</span><span class="nx">b</span><span class="p">));</span><span class="o">%</span><span class="nx">给出任意的迭代初始值</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">N</span><span class="o">=</span><span class="mi">500</span><span class="p">;</span><span class="o">%</span><span class="nx">最大迭代次数</span>
+</span></span><span class="line"><span class="cl">    <span class="o">%%</span> <span class="nx">如果谱半径小于1则说明收敛</span><span class="err">，</span><span class="nx">否则不收敛</span>    
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="nx">MaxEigM</span><span class="o">&lt;</span><span class="mi">1</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">i</span><span class="o">=</span><span class="mi">1</span><span class="p">;</span>        
+</span></span><span class="line"><span class="cl">        <span class="k">while</span> <span class="nx">i</span><span class="o">&lt;</span><span class="nx">N</span>
+</span></span><span class="line"><span class="cl">            <span class="k">if</span> <span class="nx">norm</span><span class="p">(</span><span class="nx">A</span><span class="o">*</span><span class="nx">x</span><span class="p">(</span><span class="o">:</span><span class="p">,</span><span class="nx">i</span><span class="p">)</span><span class="o">-</span><span class="nx">b</span><span class="p">)</span><span class="o">&gt;=</span><span class="mf">1e-10</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">                <span class="nx">x</span><span class="p">(</span><span class="o">:</span><span class="p">,</span><span class="nx">i</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="o">=</span><span class="nx">M</span><span class="o">*</span><span class="nx">x</span><span class="p">(</span><span class="o">:</span><span class="p">,</span><span class="nx">i</span><span class="p">)</span><span class="o">+</span><span class="nx">f</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">                <span class="nx">z</span><span class="o">=</span><span class="nx">x</span><span class="p">(</span><span class="o">:</span><span class="p">,</span><span class="nx">i</span><span class="o">+</span><span class="mi">1</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">                <span class="nx">i</span><span class="o">=</span><span class="nx">i</span><span class="o">+</span><span class="mi">1</span><span class="p">;</span>                              
+</span></span><span class="line"><span class="cl">            <span class="k">else</span>
+</span></span><span class="line"><span class="cl">                <span class="nx">n</span><span class="o">=</span><span class="nx">i</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">                <span class="nx">z</span><span class="o">=</span><span class="nx">x</span><span class="p">(</span><span class="o">:</span><span class="p">,</span><span class="nx">i</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">                <span class="nx">i</span><span class="o">=</span><span class="nx">N</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">            <span class="nx">end</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">end</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">XX</span><span class="o">=</span><span class="p">[</span><span class="nx">XX</span><span class="p">,</span><span class="nx">x</span><span class="p">];</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">I</span><span class="o">=</span><span class="p">[</span><span class="nx">I</span> <span class="nx">length</span><span class="p">(</span><span class="nx">XX</span><span class="p">)];</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">XXX</span><span class="o">=</span><span class="p">[</span><span class="nx">XXX</span> <span class="nx">XX</span><span class="p">];</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">e</span><span class="o">=</span><span class="nx">norm</span><span class="p">(</span><span class="nx">A</span><span class="o">*</span><span class="nx">z</span><span class="o">-</span><span class="nx">b</span><span class="p">);</span>       
+</span></span><span class="line"><span class="cl">    <span class="k">else</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">out</span><span class="o">=</span><span class="s1">&#39;谱半径大于等于1，该方程不能用SOR方法求解&#39;</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">end</span>
+</span></span><span class="line"><span class="cl"><span class="nx">end</span>
+</span></span><span class="line"><span class="cl"><span class="o">%%</span> <span class="nx">绘图</span>
+</span></span><span class="line"><span class="cl"><span class="nx">subplot</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="nx">plot</span><span class="p">(</span><span class="mi">1</span><span class="o">:</span><span class="nx">I</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">),</span><span class="nx">XXX</span><span class="p">(</span><span class="o">:</span><span class="p">,</span><span class="mi">1</span><span class="o">:</span><span class="nx">I</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">)),</span><span class="s1">&#39;linewidth&#39;</span><span class="p">,</span><span class="mf">1.5</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="nx">grid</span> <span class="nx">on</span>
+</span></span><span class="line"><span class="cl"><span class="nx">title</span><span class="p">(</span><span class="s1">&#39;\omega = 0.3&#39;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="nx">subplot</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="nx">plot</span><span class="p">(</span><span class="mi">1</span><span class="o">:</span><span class="nx">I</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">),</span><span class="nx">XXX</span><span class="p">(</span><span class="o">:</span><span class="p">,</span><span class="mi">1</span><span class="o">:</span><span class="nx">I</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">)),</span><span class="s1">&#39;linewidth&#39;</span><span class="p">,</span><span class="mf">1.5</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="nx">grid</span> <span class="nx">on</span>
+</span></span><span class="line"><span class="cl"><span class="nx">title</span><span class="p">(</span><span class="s1">&#39;\omega = 0.6&#39;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="nx">subplot</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="nx">plot</span><span class="p">(</span><span class="mi">1</span><span class="o">:</span><span class="nx">I</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">),</span><span class="nx">XXX</span><span class="p">(</span><span class="o">:</span><span class="p">,</span><span class="mi">1</span><span class="o">:</span><span class="nx">I</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">)),</span><span class="s1">&#39;linewidth&#39;</span><span class="p">,</span><span class="mf">1.5</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="nx">grid</span> <span class="nx">on</span>
+</span></span><span class="line"><span class="cl"><span class="nx">title</span><span class="p">(</span><span class="s1">&#39;\omega = 0.9&#39;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="nx">subplot</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="nx">plot</span><span class="p">(</span><span class="mi">1</span><span class="o">:</span><span class="nx">I</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">4</span><span class="p">),</span><span class="nx">XXX</span><span class="p">(</span><span class="o">:</span><span class="p">,</span><span class="mi">1</span><span class="o">:</span><span class="nx">I</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">4</span><span class="p">)),</span><span class="s1">&#39;linewidth&#39;</span><span class="p">,</span><span class="mf">1.5</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="nx">grid</span> <span class="nx">on</span>
+</span></span><span class="line"><span class="cl"><span class="nx">title</span><span class="p">(</span><span class="s1">&#39;\omega = 1.2&#39;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="nx">subplot</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">5</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="nx">plot</span><span class="p">(</span><span class="mi">1</span><span class="o">:</span><span class="nx">I</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">5</span><span class="p">),</span><span class="nx">XXX</span><span class="p">(</span><span class="o">:</span><span class="p">,</span><span class="mi">1</span><span class="o">:</span><span class="nx">I</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">5</span><span class="p">)),</span><span class="s1">&#39;linewidth&#39;</span><span class="p">,</span><span class="mf">1.5</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="nx">grid</span> <span class="nx">on</span>
+</span></span><span class="line"><span class="cl"><span class="nx">title</span><span class="p">(</span><span class="s1">&#39;\omega = 1.5&#39;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="nx">subplot</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">6</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="nx">plot</span><span class="p">(</span><span class="mi">1</span><span class="o">:</span><span class="nx">I</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">6</span><span class="p">),</span><span class="nx">XXX</span><span class="p">(</span><span class="o">:</span><span class="p">,</span><span class="mi">1</span><span class="o">:</span><span class="nx">I</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">6</span><span class="p">)),</span><span class="s1">&#39;linewidth&#39;</span><span class="p">,</span><span class="mf">1.5</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="nx">grid</span> <span class="nx">on</span>
+</span></span><span class="line"><span class="cl"><span class="nx">title</span><span class="p">(</span><span class="s1">&#39;\omega = 1.8&#39;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="nx">suptitle</span><span class="p">(</span><span class="s1">&#39;不同\omega值对SOR迭代法的影响&#39;</span><span class="p">)</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><a class="link" href="https://pan.baidu.com/s/1-MbwRM-rS17QoqwniemGbQ"  target="_blank" rel="noopener"
+    >数据下载地址</a>
+可关注微信公众号<font color=blue size=4><strong>用数学看世界</strong></font>回复“SOR密码”获取数据下载地址及密码</p>
+<blockquote>
+<h2 id="参考文献与链接">参考文献与链接
+</h2></blockquote>
+<p>[1]	数值分析  曾繁慧<br>
+[2]	科学计算与应用软件讲义_迭代思想  胡行华<br>
+[3]	https://mdnice.com/<br>
+[4] <a class="link" href="https://chrome.google.com/webstore/detail/markdown-nice/blndbjkicjhcbpldeamfbdoeekcbampi"  target="_blank" rel="noopener"
+    >Markdown Nice插件下载</a><br>
+[5] <a class="link" href="https://www.zhihu.com/question/376521220/answer/1054879185"  target="_blank" rel="noopener"
+    >Markdown三线表制作方法</a><br>
+更多内容请关注公众号获取
+</font></p>
+
+</section>
+
+
+    <footer class="article-footer">
+    
+
+    
+
+</footer>
+
+
+    
+        <link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css"integrity="sha384-n8MVd4RsNIU0tAv4ct0nTaAbDJwPJzDEaqSD1odI&#43;WdtXRGWt2kTvGFasHpSy3SV"crossorigin="anonymous"
+            ><script 
+                src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"integrity="sha384-XjKyOOlGwcjNTAIQHIpgOno0Hl1YQqzUOEleOLALmuqehneUG&#43;vnGctmUb0ZY0l8"crossorigin="anonymous"
+                
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"integrity="sha384-&#43;VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4&#43;/RRE05"crossorigin="anonymous"
+                
+                >
+            </script><script>
+    window.addEventListener("DOMContentLoaded", () => {
+        renderMathInElement(document.body, {
+            delimiters: [
+                { left: "$$", right: "$$", display: true },
+                { left: "$", right: "$", display: false },
+                { left: "\\(", right: "\\)", display: false },
+                { left: "\\[", right: "\\]", display: true }
+            ],
+            ignoredClasses: ["gist"]
+        });})
+</script>
+    
+</article>
+
+    
+
+    
+
+     
+    
+        
+    <script
+    src="https://giscus.app/client.js"
+    data-repo="GZhiqing/GZhiqing.github.io"
+    data-repo-id="R_kgDOM5zTGQ"
+    data-category="General"
+    data-category-id="DIC_kwDOM5zTGc4CjKCl"
+    data-mapping="pathname"
+    data-strict="0"
+    data-reactions-enabled="1"
+    data-emit-metadata="0"
+    data-input-position="top"
+    data-theme="light"
+    data-lang="en"
+    crossorigin="anonymous"
+    async
+></script>
+<script>
+    function setGiscusTheme(theme) {
+        let giscus = document.querySelector("iframe.giscus-frame");
+        if (giscus) {
+            giscus.contentWindow.postMessage(
+                {
+                    giscus: {
+                        setConfig: {
+                            theme: theme,
+                        },
+                    },
+                },
+                "https://giscus.app"
+            );
+        }
+    }
+
+    (function () {
+        addEventListener("message", (e) => {
+            if (event.origin !== "https://giscus.app") return;
+            handler();
+        });
+        window.addEventListener("onColorSchemeChange", handler);
+
+        function handler() {
+            if (document.documentElement.dataset.scheme === "light") {
+                setGiscusTheme('light');
+            } else {
+                setGiscusTheme('dark');
+            }
+        }
+    })();
+</script>
+
+    
+
+    <footer class="site-footer">
+    <section class="copyright">
+        &copy; 
+        
+            2024 - 
+        
+        2025 GZQBLOG
+    </section>
+    
+    <section class="powerby">
+        使用 <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> 构建 <br />
+        主题 <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="3.27.0">Stack</a></b> 由 <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a> 设计
+    </section>
+</footer>
+
+
+    
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    
+    <div class="pswp__bg"></div>
+
+    
+    <div class="pswp__scroll-wrap">
+
+        
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                
+                
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo="crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU="crossorigin="anonymous"
+                defer
+                >
+            </script><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css"crossorigin="anonymous"
+            ><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css"crossorigin="anonymous"
+            >
+
+            </main>
+        </div>
+        <script 
+                src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.6/dist/vibrant.min.js"integrity="sha256-awcR2jno4kI5X0zL8ex0vi2z&#43;KMkF24hUW8WePSA9HM="crossorigin="anonymous"
+                
+                >
+            </script><script type="text/javascript" src="/ts/main.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+
+    </body>
+</html>
