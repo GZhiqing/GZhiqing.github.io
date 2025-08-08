@@ -39,6 +39,14 @@
         <guid>https://GZhiqing.github.io/categories/%E6%B5%8B%E8%AF%95/</guid>
         <description>&lt;img src="https://picsum.photos/300/200?random=4" alt="Featured image of post 测试" /&gt;</description>
         </item>
+        <item>
+        <title></title>
+        <link>https://GZhiqing.github.io/categories/test/</link>
+        <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+        
+        <guid>https://GZhiqing.github.io/categories/test/</guid>
+        <description></description>
+        </item>
         
     </channel>
 </rss>
